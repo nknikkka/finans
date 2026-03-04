@@ -57,7 +57,6 @@
       max-width:1200px;font-size:15px;display:none;
     }
 
-    /* ✅ Categories: show all, no toggle */
     .cat-wrap{
       margin:12px 0 18px;padding:12px;background:#fff;border:1px solid #e6e6e6;border-radius:14px;
     }
@@ -112,16 +111,27 @@
     .btn-warning:hover{filter:brightness(0.97);}
 
     /* MODAL */
-    .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.65);overflow:auto;padding:16px;}
+    .modal{
+      display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;
+      background:rgba(0,0,0,.65);overflow:auto;padding:16px;
+    }
     .modal-content{
       background:#fff;margin:4% auto;padding:22px;border-radius:14px;width:min(820px,94%);
       box-shadow:0 10px 40px rgba(0,0,0,.35);position:relative;
     }
-    .close{color:#aaa;position:absolute;right:14px;top:10px;font-size:32px;font-weight:bold;cursor:pointer;line-height:1;}
+    .close{
+      color:#aaa;position:absolute;right:14px;top:10px;font-size:32px;font-weight:bold;cursor:pointer;line-height:1;
+    }
     .close:hover{color:#000;}
     .modal img{max-width:100%;height:auto;border-radius:12px;margin:15px 0;}
-    .modal h2{margin-top:0;color:#2e7d32;}
-    .modal p{margin:12px 0;line-height:1.7;font-size:16px;}
+    .modal h2{
+      margin-top:0;color:#2e7d32;
+      overflow-wrap:anywhere;word-break:break-word;
+    }
+    .modal p{
+      margin:12px 0;line-height:1.7;font-size:16px;
+      overflow-wrap:anywhere;word-break:break-word;
+    }
     .modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin: 10px 0 6px;}
     .open-link{
       display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;text-decoration:none;
@@ -162,31 +172,56 @@
       td:nth-child(5)::before{content:"Опис";display:block;font-weight:800;color:#2e7d32;margin-bottom:2px;}
       td:nth-child(6)::before{content:"Деталі";display:block;font-weight:800;color:#2e7d32;margin-bottom:6px;}
 
+      /* ✅ fix no-wrap / long strings */
+      td{
+        overflow-wrap:anywhere;
+        word-break:break-word;
+        white-space:normal;
+      }
+
       /* ✅ smaller image on mobile */
       img{
-        max-width:160px;
+        max-width:130px;
         width:100%;
         height:auto;
         border-radius:12px;
         margin:0;
       }
 
-      /* ✅ smaller button on mobile (not full width) */
+      /* ✅ smaller button on mobile */
       .details-btn{
         width:auto;
-        padding:9px 12px;
-        font-size:14px;
+        padding:8px 10px;
+        font-size:13px;
         border-radius:12px;
       }
     }
 
+    /* ✅ FULLSCREEN MODAL on mobile */
     @media (max-width: 520px){
-      .modal{padding:10px;}
+      .modal{
+        padding:0;
+        background:rgba(0,0,0,.75);
+      }
       .modal-content{
-        margin:10% auto;
-        width: 96%;
-        padding:16px;
-        border-radius:14px;
+        width:100%;
+        min-height:100%;
+        margin:0;
+        border-radius:0;
+        padding:16px 14px 22px;
+        box-shadow:none;
+      }
+      .close{
+        position:sticky;
+        top:0;
+        right:auto;
+        margin-left:auto;
+        display:inline-block;
+        background:#fff;
+        border:1px solid #eee;
+        border-radius:12px;
+        padding:6px 12px;
+        z-index:5;
       }
       .modal p{font-size:15px;}
       .open-link{width:100%;justify-content:center;}
@@ -375,10 +410,7 @@
         else parentCatName = (textOf(el, "category") || "Без категорії").trim();
 
         const nameUa = readLangText(el, "name", "ua") || "—";
-
-        // ✅ Артикул: спробуємо взяти з <vendorCode>, якщо нема — fallback на @id
         const artikul = (textOf(el, "vendorCode") || "").trim() || (el.getAttribute("id") || "").trim() || "—";
-
         const url = (textOf(el, "url") || "").trim();
 
         rows.push({
@@ -436,7 +468,7 @@
       loadMoreWrap.style.display = "none";
     }
 
-    renderCategories(); // ✅ now always full list
+    renderCategories();
 
     let renderGroups;
     if (activeCat === "__ALL__") {
