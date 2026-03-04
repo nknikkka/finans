@@ -147,7 +147,13 @@
   const reloadBtn = document.getElementById("reloadBtn");
   const clearBtn = document.getElementById("clearBtn");
 
-const FEED_URL = "https://proxy.corsfix.com/?url=https://podillyafinance.com.ua/index.php?route=extension/feed/unixml/prom";);  
+  const FEED_URL = "https://proxy.corsfix.com/?url=https://podillyafinance.com.ua/index.php?route=extension/feed/unixml/prom";
+
+  let rows = [];
+  let activeCat = "__ALL__";
+  let groups = new Map();
+
+  reloadBtn.addEventListener("click", () => load());
   clearBtn.addEventListener("click", () => {
     qEl.value = "";
     activeCat = "__ALL__";
@@ -174,7 +180,6 @@ const FEED_URL = "https://proxy.corsfix.com/?url=https://podillyafinance.com.ua/
   }
 
   function extractOfferNodes(doc){
-    // У твоєму фіді це <offer>
     const offers = Array.from(doc.getElementsByTagName("offer"));
     if (!offers.length) {
       const rootTag = doc.documentElement ? doc.documentElement.tagName : "(немає root)";
@@ -201,6 +206,16 @@ const FEED_URL = "https://proxy.corsfix.com/?url=https://podillyafinance.com.ua/
       if (!resp.ok) throw new Error(`Не вдалося завантажити ${FEED_URL}: ${resp.status} ${resp.statusText}`);
 
       const xmlText = await resp.text();
+
+      // Дебаг — подивись у консолі, що саме прийшло
+      console.log("Статус відповіді від Corsfix:", resp.status);
+      console.log("Довжина отриманого тексту:", xmlText.length);
+      console.log("Перші 300 символів відповіді:", xmlText.substring(0, 300));
+
+      if (xmlText.trim() === "") {
+        throw new Error("Отримана порожня відповідь від проксі");
+      }
+
       const doc = new DOMParser().parseFromString(xmlText, "text/xml");
 
       const parserError = doc.getElementsByTagName("parsererror")[0];
@@ -244,8 +259,8 @@ const FEED_URL = "https://proxy.corsfix.com/?url=https://podillyafinance.com.ua/
     } catch(e){
       statusEl.textContent = "Помилка";
       errorEl.style.display = "block";
-      errorEl.textContent =
-        `Помилка: ${String(e)}\n\nПеревір:\n1) URL фіда доступний і повертає XML (зараз повертає 503 - сервіс недоступний, можливо, потрібно згенерувати фід у UniXML)\n2) Якщо CORS проблема, розмісти сторінку на тому ж домені або використовуй проксі\n3) Сервер OpenCart дозволяє доступ з твого сайту`;
+      errorEl.textContent = `Помилка: ${String(e)}\n\nПеревір:\n1) Чи фід доступний у браузері безпосередньо\n2) Чи правильно налаштовані Origin та Target Domains у Corsfix\n3) Чи активний твій Trial план`;
+      console.error("Детальна помилка:", e);
     }
   }
 
@@ -260,7 +275,6 @@ const FEED_URL = "https://proxy.corsfix.com/?url=https://podillyafinance.com.ua/
 
     statusEl.innerHTML = `Товарів: <b>${filtered.length}</b> <span class="muted">(категорія: ${escapeHtml(activeCat === "__ALL__" ? "Усі" : activeCat)})</span>`;
 
-    // якщо вибрані "усі" — показуємо блоками по категоріях
     let renderGroups;
     if(activeCat === "__ALL__"){
       const byCat = new Map();
@@ -349,7 +363,7 @@ const FEED_URL = "https://proxy.corsfix.com/?url=https://podillyafinance.com.ua/
     for(let i=0; i<showCount; i++){
       const r = items[i];
       const imgTag = r.picture
-        ? `<img src="${escapeHtml(r.picture)}" alt="${escapeHtml(r.name)}">`
+        ? `<img src="${escapeHtml(r.picture)}" alt="${escapeHtml(r.name)}" onerror="this.src='https://via.placeholder.com/90?text=Фото';">`
         : "—";
 
       const descrShort = r.descr.length > 160 ? (r.descr.slice(0,160) + "...") : r.descr;
