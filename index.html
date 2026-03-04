@@ -147,8 +147,9 @@
   const reloadBtn = document.getElementById("reloadBtn");
   const clearBtn = document.getElementById("clearBtn");
 
-const FEED_URL = "https://proxy.cors.sh/" + encodeURIComponent("https://podillyafinance.com.ua/index.php?route=extension/feed/unixml/prom");
-  clearBtn.addEventListener("click", () => {
+const FEED_URL = "https://proxy.corsfix.com/?" + encodeURIComponent(
+  "https://podillyafinance.com.ua/index.php?route=extension/feed/unixml/prom"
+);  clearBtn.addEventListener("click", () => {
     qEl.value = "";
     activeCat = "__ALL__";
     render();
