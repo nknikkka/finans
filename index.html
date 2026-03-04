@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Прайс-лист — категорії + пошук</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f9f9f9; }
+    .topbar{
+      position: sticky; top:0; z-index: 10;
+      background:#fff; border-bottom:1px solid #e6e6e6;
+      padding: 14px 16px;
+    }
+    .wrap{ max-width: 1300px; margin: 0 auto; }
+    h1{ margin:0 0 10px; font-size: 20px; color:#333; }
+
+    .controls{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    }
+    input[type="search"]{
+      flex: 1;
+      min-width: 260px;
+      padding:10px 12px;
+      border:1px solid #ddd;
+      border-radius:10px;
+      outline:none;
+      background:#fff;
+    }
+    button{
+      padding:10px 12px;
+      border:1px solid #ddd;
+      border-radius:10px;
+      background:#fff;
+      cursor:pointer;
+      white-space: nowrap;
+    }
+    button:hover{ background:#f2f2f2; }
+
+    .status{ margin-top:10px; font-weight:700; text-align:center; }
+    .error{ color:#d32f2f; white-space: pre-wrap; text-align:left; margin-top:10px; }
+
+    .layout{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap: 14px;
+      padding: 14px 16px;
+    }
+    @media (max-width: 980px){
+      .layout{ grid-template-columns: 1fr; }
+      .cats{ position: static; }
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid #e6e6e6;
+      border-radius:14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .cats{ padding: 10px; }
+    .cats h3{ margin: 8px 8px 10px; font-size: 14px; color:#333; }
+    .cat-list{ list-style:none; padding:0; margin:0; max-height: 70vh; overflow:auto; }
+    .cat-item{
+      display:flex; justify-content:space-between; gap:10px;
+      padding:10px 10px;
+      border-radius:10px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .cat-item:hover{ background:#f5faff; }
+    .cat-item.active{ background:#1976d2; color:#fff; }
+    .badge{
+      font-size:12px; padding:2px 8px; border-radius:999px;
+      border:1px solid rgba(0,0,0,0.12);
+      background:#fff;
+      color:#333;
+    }
+    .cat-item.active .badge{
+      border-color: rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.12);
+      color:#fff;
+    }
+
+    .content{ padding: 10px; }
+    .group{
+      margin: 10px;
+      border:1px solid #e6e6e6;
+      border-radius:14px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .group-header{
+      display:flex; justify-content:space-between; align-items:center;
+      padding: 12px 14px;
+      background:#f5faff;
+      cursor:pointer;
+      user-select:none;
+      font-weight: 700;
+    }
+    .group-header small{ font-weight: normal; color:#555; }
+    .group-body{ padding: 10px; display:block; }
+
+    table { width: 100%; border-collapse: collapse; background: white; }
+    th, td { padding: 10px; border: 1px solid #ddd; text-align: left; vertical-align: top; }
+    th { background: #1976d2; color: white; position: sticky; top: 62px; }
+    tr:nth-child(even) { background: #f5faff; }
+    img { max-width: 90px; height: auto; border-radius: 4px; display:block; }
+
+    .muted{ color:#666; font-weight: normal; }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="wrap">
+      <h1>Прайс-лист товарів</h1>
+      <div class="controls">
+        <input id="q" type="search" placeholder="Пошук: назва або ID…" />
+        <button id="reloadBtn" type="button">🔄 Оновити</button>
+        <button id="clearBtn" type="button">🧹 Скинути</button>
+      </div>
+      <div id="status" class="status">Завантаження…</div>
+      <div id="error" class="error" style="display:none;"></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="layout">
+      <div class="card cats">
+        <h3>Категорії</h3>
+        <ul id="catList" class="cat-list"></ul>
+      </div>
+
+      <div class="card content">
+        <div id="output"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(async () => {
+  const statusEl = document.getElementById("status");
+  const errorEl = document.getElementById("error");
+  const outputEl = document.getElementById("output");
+  const catListEl = document.getElementById("catList");
+  const qEl = document.getElementById("q");
+  const reloadBtn = document.getElementById("reloadBtn");
+  const clearBtn = document.getElementById("clearBtn");
+
+const FEED_URL = "https://np.com.ua/dealer-export?dealer_id=69196&platform=unixml&filetype=xml&lang=ru";  clearBtn.addEventListener("click", () => {
+    qEl.value = "";
+    activeCat = "__ALL__";
+    render();
+  });
+  qEl.addEventListener("input", () => render());
+
+  function textOf(parent, tagName) {
+    const el = parent.getElementsByTagName(tagName)[0];
+    return el ? (el.textContent || "").trim() : "";
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function normalize(s) {
+    return String(s || "").toLowerCase().replace(/\s+/g, " ").trim();
+  }
+
+  function extractOfferNodes(doc){
+    // У твоєму фіді це <offer>
+    const offers = Array.from(doc.getElementsByTagName("offer"));
+    if (!offers.length) {
+      const rootTag = doc.documentElement ? doc.documentElement.tagName : "(немає root)";
+      throw new Error(`Не знайдено тегів <offer>. Root: <${rootTag}>`);
+    }
+    return offers;
+  }
+
+  function readLangText(parent, tagName, lang = "ua") {
+    const els = Array.from(parent.getElementsByTagName(tagName));
+    if (!els.length) return "";
+    const exact = els.find(e => (e.getAttribute("lang") || "").toLowerCase() === lang.toLowerCase());
+    return ((exact ? exact.textContent : els[0].textContent) || "").trim();
+  }
+
+  async function load(){
+    try{
+      errorEl.style.display = "none";
+      errorEl.textContent = "";
+      statusEl.textContent = "Завантаження…";
+      outputEl.innerHTML = "";
+
+      const resp = await fetch(FEED_URL, { cache: "no-store" });
+      if (!resp.ok) throw new Error(`Не вдалося завантажити ${FEED_URL}: ${resp.status} ${resp.statusText}`);
+
+      const xmlText = await resp.text();
+      const doc = new DOMParser().parseFromString(xmlText, "text/xml");
+
+      const parserError = doc.getElementsByTagName("parsererror")[0];
+      if (parserError) {
+        throw new Error("XML не розпарсився.\n\n" + parserError.textContent);
+      }
+
+      const offers = extractOfferNodes(doc);
+
+      rows = offers.map(el => {
+        const cat = (textOf(el, "category") || "Без категорії").trim();
+        const name = readLangText(el, "name", "ua") || "—";
+        const descr = readLangText(el, "description", "ua") || "—";
+        const price = (textOf(el, "price") || "").trim() || "—";
+        const id = (el.getAttribute("id") || "").trim() || "—";
+        const picture = (textOf(el, "picture") || "").trim();
+
+        return {
+          cat,
+          name,
+          descr,
+          price,
+          id,
+          picture,
+          _search: normalize(name + " " + id + " " + cat)
+        };
+      });
+
+      // групування по категоріях
+      groups = new Map();
+      for(const r of rows){
+        if(!groups.has(r.cat)) groups.set(r.cat, []);
+        groups.get(r.cat).push(r);
+      }
+      // сортування категорій по кількості
+      groups = new Map([...groups.entries()].sort((a,b) => b[1].length - a[1].length));
+
+      if(activeCat !== "__ALL__" && !groups.has(activeCat)) activeCat = "__ALL__";
+
+      render();
+    } catch(e){
+      statusEl.textContent = "Помилка";
+      errorEl.style.display = "block";
+      errorEl.textContent =
+        `Помилка: ${String(e)}\n\nПеревір:\n1) URL фіда доступний і повертає XML (зараз повертає 503 - сервіс недоступний, можливо, потрібно згенерувати фід у UniXML)\n2) Якщо CORS проблема, розмісти сторінку на тому ж домені або використовуй проксі\n3) Сервер OpenCart дозволяє доступ з твого сайту`;
+    }
+  }
+
+  function render(){
+    const q = normalize(qEl.value);
+
+    renderCategoryList(q);
+
+    let filtered = rows;
+    if(activeCat !== "__ALL__") filtered = filtered.filter(r => r.cat === activeCat);
+    if(q) filtered = filtered.filter(r => r._search.includes(q));
+
+    statusEl.innerHTML = `Товарів: <b>${filtered.length}</b> <span class="muted">(категорія: ${escapeHtml(activeCat === "__ALL__" ? "Усі" : activeCat)})</span>`;
+
+    // якщо вибрані "усі" — показуємо блоками по категоріях
+    let renderGroups;
+    if(activeCat === "__ALL__"){
+      const byCat = new Map();
+      for(const r of filtered){
+        if(!byCat.has(r.cat)) byCat.set(r.cat, []);
+        byCat.get(r.cat).push(r);
+      }
+      renderGroups = [...byCat.entries()].sort((a,b)=> b[1].length - a[1].length);
+    } else {
+      renderGroups = [[activeCat, filtered]];
+    }
+
+    outputEl.innerHTML = renderGroups.map(([cat, items]) => renderGroup(cat, items)).join("");
+
+    document.querySelectorAll("[data-group-toggle]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-group-toggle");
+        const body = document.getElementById(id);
+        if(!body) return;
+        body.style.display = (body.style.display === "none") ? "block" : "none";
+      });
+    });
+  }
+
+  function renderCategoryList(q){
+    const counts = new Map();
+    for(const [cat, items] of groups.entries()){
+      let list = items;
+      if(q) list = list.filter(r => r._search.includes(q));
+      counts.set(cat, list.length);
+    }
+    const total = rows.filter(r => !q || r._search.includes(q)).length;
+
+    const liAll = `
+      <li class="cat-item ${activeCat === "__ALL__" ? "active" : ""}" data-cat="__ALL__">
+        <span>Усі</span>
+        <span class="badge">${total}</span>
+      </li>
+    `;
+
+    const liCats = [...groups.keys()].map(cat => {
+      const c = counts.get(cat) || 0;
+      return `
+        <li class="cat-item ${activeCat === cat ? "active" : ""}" data-cat="${escapeHtml(cat)}">
+          <span>${escapeHtml(cat)}</span>
+          <span class="badge">${c}</span>
+        </li>
+      `;
+    }).join("");
+
+    catListEl.innerHTML = liAll + liCats;
+
+    catListEl.querySelectorAll(".cat-item").forEach(li => {
+      li.addEventListener("click", () => {
+        const cat = li.getAttribute("data-cat");
+        activeCat = (cat === "__ALL__") ? "__ALL__" : cat;
+        render();
+      });
+    });
+  }
+
+  function renderGroup(cat, items){
+    const groupId = "g_" + hash(cat);
+    const showCount = Math.min(200, items.length);
+
+    let html = `
+      <div class="group">
+        <div class="group-header" data-group-toggle="${groupId}">
+          <div>${escapeHtml(cat)}</div>
+          <small>Товарів: ${items.length} (показано: ${showCount})</small>
+        </div>
+        <div class="group-body" id="${groupId}">
+          <table>
+            <thead>
+              <tr>
+                <th>Фото</th>
+                <th>Назва</th>
+                <th>ID</th>
+                <th>Ціна</th>
+                <th>Опис</th>
+              </tr>
+            </thead>
+            <tbody>
+    `;
+
+    for(let i=0; i<showCount; i++){
+      const r = items[i];
+      const imgTag = r.picture
+        ? `<img src="${escapeHtml(r.picture)}" alt="${escapeHtml(r.name)}">`
+        : "—";
+
+      const descrShort = r.descr.length > 160 ? (r.descr.slice(0,160) + "...") : r.descr;
+
+      html += `
+        <tr>
+          <td>${imgTag}</td>
+          <td>${escapeHtml(r.name)}</td>
+          <td>${escapeHtml(r.id)}</td>
+          <td>${escapeHtml(r.price)}</td>
+          <td>${escapeHtml(descrShort)}</td>
+        </tr>
+      `;
+    }
+
+    html += `
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+    return html;
+  }
+
+  function hash(s){
+    let h = 0;
+    for(let i=0; i<s.length; i++){
+      h = ((h<<5)-h) + s.charCodeAt(i);
+      h |= 0;
+    }
+    return String(Math.abs(h));
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>
