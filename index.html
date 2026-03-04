@@ -1,51 +1,601 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Прайс-лист товарів НУШ</title>
+
+  <style>
+    body{margin:0;font-family:Montserrat,Arial,sans-serif;background:#f9f9f9;color:#222;}
+
+    .site-header{
+      background:linear-gradient(135deg,#2e7d32,#4caf50);
+      color:#fff;position:sticky;top:0;z-index:100;
+      box-shadow:0 3px 10px rgba(0,0,0,.15);
+    }
+    .header-container{
+      max-width:1400px;margin:auto;display:flex;align-items:center;justify-content:space-between;
+      padding:20px;gap:30px;
+    }
+    .site-title{font-size:38px;font-weight:800;letter-spacing:1px;white-space:nowrap;}
+    .contacts{display:flex;flex-direction:column;gap:6px;font-size:16px;align-items:flex-end;}
+    .contact-item{display:flex;align-items:center;gap:8px;line-height:1.2;}
+    .contact-item span{font-weight:700;}
+    .contacts a{color:#fff;text-decoration:none;}
+    .contacts a:hover{text-decoration:underline;}
+    @media (max-width:768px){
+      .header-container{flex-direction:column;text-align:center;}
+      .site-title{font-size:28px;white-space:normal;}
+      .contacts{align-items:center;}
+    }
+
+    .wrap{max-width:1400px;margin:0 auto;padding:0 16px;}
+
+    .controls{
+      display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center;
+      margin:16px 0 10px;
+    }
+    input[type="search"]{
+      flex:1;max-width:520px;min-width:260px;
+      padding:12px 16px;border:1px solid #ddd;border-radius:12px;outline:none;background:#fff;font-size:16px;
+    }
+    button{
+      padding:12px 16px;border:1px solid #ddd;border-radius:12px;background:#fff;cursor:pointer;
+      white-space:nowrap;font-size:16px;
+    }
+    button:hover{background:#f2f2f2;}
+
+    .status{margin:8px 0 10px;font-weight:800;text-align:center;font-size:16px;}
+    .muted{color:#666;font-weight:600;}
+    .error{
+      color:#d32f2f;white-space:pre-wrap;text-align:left;margin:10px auto 0;
+      max-width:1200px;font-size:15px;display:none;
+    }
+
+    .cat-wrap{
+      margin:12px 0 18px;padding:12px 12px 10px;background:#fff;border:1px solid #e6e6e6;border-radius:14px;
+    }
+    .cat-topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap;}
+    .cat-title{font-weight:800;color:#2e7d32;font-size:14px;}
+    .cat-toggle{
+      padding:8px 12px;border-radius:999px;border:1px solid #ddd;background:#fff;font-weight:800;
+      cursor:pointer;font-size:14px;
+    }
+
+    .categories-bar{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 12px;}
+    .categories-bar.clamp{max-height:94px;overflow:hidden;}
+    @media (max-width:520px){ .categories-bar.clamp{max-height:132px;} }
+
+    .cat-chip{
+      padding:9px 16px;background:#f2f2f2;border-radius:999px;cursor:pointer;font-size:14px;transition:.2s;
+      border:1px solid #ddd;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      user-select:none;
+    }
+    .cat-chip:hover{background:#e9f7ea;border-color:#bfe3c2;}
+    .cat-chip.active{
+      background:linear-gradient(135deg,#2e7d32,#66bb6a);
+      color:#fff;border-color:#2e7d32;
+    }
+    .cat-chip .badge{
+      background:rgba(0,0,0,.12);color:inherit;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:800;
+    }
+
+    .content{padding:0 0 18px;}
+
+    .group{
+      margin:18px 0;border:1px solid #e6e6e6;border-radius:14px;overflow:hidden;background:#fff;
+    }
+    .group-header{
+      display:flex;justify-content:space-between;align-items:center;padding:14px 18px;
+      background:linear-gradient(90deg,rgba(255,193,7,.20),rgba(46,125,50,.10));
+      cursor:pointer;font-weight:800;user-select:none;
+    }
+    .group-header small{font-weight:700;color:#555;}
+    .group-body{padding:0;overflow-x:auto;}
+
+    table{width:90%;max-width:90%;margin:0 auto;border-collapse:collapse;background:#fff;table-layout:auto;}
+    th,td{padding:8px 10px;border:1px solid #ddd;text-align:left;vertical-align:top;}
+    th{background:#2e7d32;color:#fff;position:sticky;top:0;z-index:5;}
+    tr:nth-child(even){background:#f8fff8;}
+    img{max-width:140px;height:auto;border-radius:8px;display:block;margin:0 auto;}
+
+    .details-btn{
+      background:#ffc107;color:#333;border:none;padding:8px 14px;border-radius:10px;cursor:pointer;
+      font-size:14px;font-weight:800;transition:background .2s,transform .15s;
+    }
+    .details-btn:hover{background:#ffb300;transform:translateY(-1px);}
+
+    /* ✅ Buttons under lists */
+    .load-more-wrap{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      padding:12px 0 18px;
+    }
+    .btn-primary{
+      border:none;
+      background:linear-gradient(135deg,#2e7d32,#66bb6a);
+      color:#fff;
+      font-weight:800;
+    }
+    .btn-primary:hover{filter:brightness(0.95);}
+    .btn-warning{
+      border:none;
+      background:linear-gradient(135deg,#ffc107,#ffb300);
+      color:#1a1a1a;
+      font-weight:800;
+    }
+    .btn-warning:hover{filter:brightness(0.97);}
+
+    /* MODAL */
+    .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.65);overflow:auto;padding:16px;}
+    .modal-content{
+      background:#fff;margin:4% auto;padding:22px;border-radius:14px;width:min(820px,94%);
+      box-shadow:0 10px 40px rgba(0,0,0,.35);position:relative;
+    }
+    .close{color:#aaa;position:absolute;right:14px;top:10px;font-size:32px;font-weight:bold;cursor:pointer;line-height:1;}
+    .close:hover{color:#000;}
+    .modal img{max-width:100%;height:auto;border-radius:12px;margin:15px 0;}
+    .modal h2{margin-top:0;color:#2e7d32;}
+    .modal p{margin:12px 0;line-height:1.7;font-size:16px;}
+
+    /* ✅ Link button in modal */
+    .modal-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin: 10px 0 6px;
+    }
+    .open-link{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:800;
+      border:1px solid #ddd;
+      background:linear-gradient(135deg,#2e7d32,#66bb6a);
+      color:#fff;
+    }
+    .open-link:hover{filter:brightness(0.95);}
+    .open-link.secondary{
+      background:#fff;
+      color:#2e7d32;
+    }
+  </style>
 </head>
+
 <body>
-  <style>.footer {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(90deg, #1a9100, #fff200);
-  padding: 15px 30px;
-  color: #000;
-}
 
-.logo {
-  height: 60px;
-}
+<header class="site-header">
+  <div class="header-container">
+    <div class="site-title">Прайс-лист товарів НУШ</div>
 
-.footer-center h1 {
-  margin: 0;
-  font-size: 28px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
+    <div class="contacts">
+      <div class="contact-item">
+        <span>📞 Телефон:</span>
+        <a href="tel:+380681234567">+38 (068) 123-45-67</a>
+      </div>
+      <div class="contact-item">
+        <span>✉ Gmail:</span>
+        <a href="mailto:office@podillyafinance.com.ua">office@podillyafinance.com.ua</a>
+      </div>
+      <div class="contact-item">
+        <span>🌐 Сайт:</span>
+        <a href="https://podillyafinance.com.ua/" target="_blank" rel="noopener">podillyafinance.com.ua</a>
+      </div>
+    </div>
+  </div>
+</header>
 
-.footer-right p {
-  margin: 3px 0;
-  font-size: 16px;
-  font-weight: 600;
-}
-</style>
-<footer class="footer">
-  <div class="footer-left">
-    <img src="logo.png" alt="Logo" class="logo">
+<div class="wrap">
+  <div class="controls">
+    <input id="q" type="search" placeholder="Пошук: назва або ID…" />
+    <button id="reloadBtn" type="button">🔄 Оновити</button>
+    <button id="clearBtn" type="button">🧹 Скинути</button>
   </div>
 
-  <div class="footer-center">
-    <h1>ПРАЙС ЛИСТ по НУШ</h1>
+  <div id="status" class="status">Завантаження…</div>
+  <div id="error" class="error"></div>
+
+  <div class="cat-wrap">
+    <div class="cat-topline">
+      <div class="cat-title">Категорії (батьківські)</div>
+      <button id="catToggle" class="cat-toggle" type="button">Показати всі</button>
+    </div>
+    <div class="categories-bar clamp" id="catBar"></div>
   </div>
 
-  <div class="footer-right">
-    <p class="phone">+380933897946</p>
-    <p class="email"><b>nush.price@gmail.com</b></p>
-  </div>
-</footer>
+  <div class="content">
+    <div id="output"></div>
 
- 
+    <div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
+      <button id="moreBtn" class="btn-primary" type="button">Показати ще</button>
+      <button id="allBtn" class="btn-warning" type="button">Показати всі</button>
+      <button id="collapseBtn" type="button">Згорнути до 200</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeModal">×</span>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+(async () => {
+  const statusEl = document.getElementById("status");
+  const errorEl = document.getElementById("error");
+  const outputEl = document.getElementById("output");
+  const catBarEl = document.getElementById("catBar");
+  const qEl = document.getElementById("q");
+  const reloadBtn = document.getElementById("reloadBtn");
+  const clearBtn = document.getElementById("clearBtn");
+
+  const catToggleBtn = document.getElementById("catToggle");
+
+  const loadMoreWrap = document.getElementById("loadMoreWrap");
+  const moreBtn = document.getElementById("moreBtn");
+  const allBtn = document.getElementById("allBtn");
+  const collapseBtn = document.getElementById("collapseBtn");
+
+  const modal = document.getElementById("modal");
+  const modalBody = document.getElementById("modalBody");
+  const closeModal = document.getElementById("closeModal");
+
+  const FEED_URL = "PriceList.xml";
+
+  const PAGE_SIZE = 200;
+  let visibleLimit = PAGE_SIZE;
+
+  let rows = [];
+  let activeCat = "__ALL__";
+  let groups = new Map();
+  let categoryMap = new Map();
+  let catsExpanded = false;
+
+  reloadBtn.addEventListener("click", () => load());
+  clearBtn.addEventListener("click", () => {
+    qEl.value = "";
+    activeCat = "__ALL__";
+    visibleLimit = PAGE_SIZE;
+    render();
+  });
+  qEl.addEventListener("input", () => {
+    visibleLimit = PAGE_SIZE;
+    render();
+  });
+
+  catToggleBtn.addEventListener("click", () => {
+    catsExpanded = !catsExpanded;
+    catBarEl.classList.toggle("clamp", !catsExpanded);
+    catToggleBtn.textContent = catsExpanded ? "Згорнути" : "Показати всі";
+  });
+
+  moreBtn.addEventListener("click", () => {
+    visibleLimit += PAGE_SIZE;
+    render();
+  });
+  allBtn.addEventListener("click", () => {
+    visibleLimit = Number.MAX_SAFE_INTEGER;
+    render();
+  });
+  collapseBtn.addEventListener("click", () => {
+    visibleLimit = PAGE_SIZE;
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  closeModal.onclick = () => modal.style.display = "none";
+  window.onclick = (event) => { if (event.target === modal) modal.style.display = "none"; };
+
+  function textOf(parent, tagName) {
+    const el = parent.getElementsByTagName(tagName)[0];
+    return el ? (el.textContent || "").trim() : "";
+  }
+
+  function readLangText(parent, tagName, lang = "ua") {
+    const els = Array.from(parent.getElementsByTagName(tagName));
+    if (!els.length) return "";
+    const exact = els.find(e => (e.getAttribute("lang") || "").toLowerCase() === lang.toLowerCase());
+    return ((exact ? exact.textContent : els[0].textContent) || "").trim();
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function normalize(s) {
+    return String(s || "").toLowerCase().replace(/\s+/g, " ").trim();
+  }
+
+  function getParentCategoryName(catId) {
+    let current = categoryMap.get(catId);
+    if (!current) return "Без категорії";
+
+    let name = current.name;
+    let parentId = current.parentId;
+
+    while (parentId && categoryMap.has(parentId)) {
+      current = categoryMap.get(parentId);
+      name = current.name;
+      parentId = current.parentId;
+    }
+    return name;
+  }
+
+  async function load() {
+    try {
+      errorEl.style.display = "none";
+      errorEl.textContent = "";
+
+      statusEl.textContent = "Завантаження…";
+      outputEl.innerHTML = "";
+      catBarEl.innerHTML = "";
+
+      visibleLimit = PAGE_SIZE;
+
+      const resp = await fetch(FEED_URL, { cache: "no-store" });
+      if (!resp.ok) throw new Error(`Не вдалося завантажити ${FEED_URL}: ${resp.status}`);
+
+      const xmlText = await resp.text();
+      const doc = new DOMParser().parseFromString(xmlText, "text/xml");
+
+      if (doc.getElementsByTagName("parsererror").length > 0) {
+        throw new Error("XML не розпарсився");
+      }
+
+      categoryMap.clear();
+      const categories = doc.getElementsByTagName("category");
+      for (const cat of categories) {
+        const id = cat.getAttribute("id");
+        const name = (cat.textContent || "").trim();
+        const parentId = cat.getAttribute("parentId") || null;
+        if (id) categoryMap.set(id, { name, parentId });
+      }
+
+      rows = [];
+      const offers = doc.getElementsByTagName("offer");
+
+      for (const el of offers) {
+        const catId = textOf(el, "categoryId") || "";
+        let parentCatName = "Без категорії";
+
+        if (catId && categoryMap.has(catId)) parentCatName = getParentCategoryName(catId);
+        else parentCatName = (textOf(el, "category") || "Без категорії").trim();
+
+        const nameUa = readLangText(el, "name", "ua") || "—";
+        const id = (el.getAttribute("id") || "").trim() || "—";
+
+        // ✅ NEW: беремо <url> з фіду
+        const url = (textOf(el, "url") || "").trim();
+
+        rows.push({
+          cat: parentCatName,
+          name: nameUa,
+          descr: readLangText(el, "description", "ua") || "—",
+          price: (textOf(el, "price") || "").trim() || "—",
+          id,
+          picture: (textOf(el, "picture") || "").trim(),
+          url, // ✅ зберігаємо
+          _search: normalize(nameUa + " " + id + " " + parentCatName)
+        });
+      }
+
+      groups = new Map();
+      for (const r of rows) {
+        if (!groups.has(r.cat)) groups.set(r.cat, []);
+        groups.get(r.cat).push(r);
+      }
+      groups = new Map([...groups.entries()].sort((a, b) => b[1].length - a[1].length));
+
+      if (activeCat !== "__ALL__" && !groups.has(activeCat)) activeCat = "__ALL__";
+
+      render();
+    } catch (e) {
+      statusEl.textContent = "Помилка";
+      errorEl.style.display = "block";
+      errorEl.textContent = `Помилка: ${String(e)}`;
+      loadMoreWrap.style.display = "none";
+    }
+  }
+
+  function getFilteredRows() {
+    const q = normalize(qEl.value);
+
+    let filtered = rows;
+    if (activeCat !== "__ALL__") filtered = filtered.filter(r => r.cat === activeCat);
+    if (q) filtered = filtered.filter(r => r._search.includes(q));
+    return filtered;
+  }
+
+  function render() {
+    const q = normalize(qEl.value);
+    renderCategories(q);
+
+    const filtered = getFilteredRows();
+    const showing = Math.min(visibleLimit, filtered.length);
+
+    statusEl.innerHTML =
+      `Товарів: <b>${filtered.length}</b> <span class="muted">(показано: ${showing}, категорія: ${escapeHtml(activeCat === "__ALL__" ? "Усі" : activeCat)})</span>`;
+
+    if (filtered.length > PAGE_SIZE) {
+      loadMoreWrap.style.display = "flex";
+      moreBtn.style.display = (visibleLimit < filtered.length) ? "inline-block" : "none";
+      allBtn.style.display = (visibleLimit < filtered.length) ? "inline-block" : "none";
+      collapseBtn.style.display = (visibleLimit > PAGE_SIZE) ? "inline-block" : "none";
+    } else {
+      loadMoreWrap.style.display = "none";
+    }
+
+    let renderGroups;
+    if (activeCat === "__ALL__") {
+      const byCat = new Map();
+      for (const r of filtered) {
+        if (!byCat.has(r.cat)) byCat.set(r.cat, []);
+        byCat.get(r.cat).push(r);
+      }
+      renderGroups = [...byCat.entries()].sort((a,b) => b[1].length - a[1].length);
+    } else {
+      renderGroups = [[activeCat, filtered]];
+    }
+
+    outputEl.innerHTML = renderGroups.map(([cat, items]) => renderGroup(cat, items, visibleLimit)).join("");
+
+    document.querySelectorAll("[data-group-toggle]").forEach(h => {
+      h.addEventListener("click", () => {
+        const id = h.getAttribute("data-group-toggle");
+        const body = document.getElementById(id);
+        if (!body) return;
+        body.style.display = (body.style.display === "none") ? "block" : "none";
+      });
+    });
+  }
+
+  function renderCategories(q) {
+    const counts = new Map();
+    for (const [cat, items] of groups.entries()) {
+      let list = items;
+      if (q) list = list.filter(r => r._search.includes(q));
+      counts.set(cat, list.length);
+    }
+    const total = rows.filter(r => !q || r._search.includes(q)).length;
+
+    let html = `
+      <div class="cat-chip ${activeCat === "__ALL__" ? "active" : ""}" data-cat="__ALL__">
+        Усі <span class="badge">${total}</span>
+      </div>
+    `;
+
+    [...groups.keys()].forEach(cat => {
+      const c = counts.get(cat) || 0;
+      html += `
+        <div class="cat-chip ${activeCat === cat ? "active" : ""}" data-cat="${escapeHtml(cat)}">
+          ${escapeHtml(cat)} <span class="badge">${c}</span>
+        </div>
+      `;
+    });
+
+    catBarEl.innerHTML = html;
+
+    requestAnimationFrame(() => {
+      const needsToggle = catBarEl.scrollHeight > catBarEl.clientHeight + 2;
+      catToggleBtn.style.display = needsToggle ? "inline-block" : "none";
+      if (!needsToggle) {
+        catsExpanded = true;
+        catBarEl.classList.remove("clamp");
+      } else {
+        catBarEl.classList.toggle("clamp", !catsExpanded);
+      }
+    });
+
+    catBarEl.querySelectorAll(".cat-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        activeCat = chip.getAttribute("data-cat");
+        visibleLimit = PAGE_SIZE;
+        render();
+      });
+    });
+  }
+
+  function renderGroup(cat, items, limitGlobal) {
+    const groupId = "g_" + Math.abs(cat.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0));
+    const showCount = Math.min(limitGlobal, items.length);
+
+    let html = `
+      <div class="group">
+        <div class="group-header" data-group-toggle="${groupId}">
+          <div>${escapeHtml(cat)}</div>
+          <small>Товарів: ${items.length} (показано: ${showCount})</small>
+        </div>
+        <div class="group-body" id="${groupId}">
+          <table>
+            <thead>
+              <tr>
+                <th>Фото</th>
+                <th>Назва</th>
+                <th>ID</th>
+                <th>Ціна</th>
+                <th>Опис</th>
+                <th>Деталі</th>
+              </tr>
+            </thead>
+            <tbody>
+    `;
+
+    for (let i = 0; i < showCount; i++) {
+      const r = items[i];
+
+      const imgTag = r.picture
+        ? `<img src="${escapeHtml(r.picture)}" alt="${escapeHtml(r.name)}"
+             onerror="this.onerror=null;this.src='https://via.placeholder.com/140?text=Немає+фото';">`
+        : "—";
+
+      const descrShort = r.descr.length > 160 ? (r.descr.slice(0,160) + "...") : r.descr;
+
+      html += `
+        <tr>
+          <td>${imgTag}</td>
+          <td>${escapeHtml(r.name)}</td>
+          <td>${escapeHtml(r.id)}</td>
+          <td>${escapeHtml(r.price)}</td>
+          <td>${escapeHtml(descrShort)}</td>
+          <td>
+            <button class="details-btn"
+              onclick="showModal('${escapeHtml(r.name)}','${escapeHtml(r.id)}','${escapeHtml(r.price)}','${escapeHtml(r.picture)}','${escapeHtml(r.descr)}','${escapeHtml(r.cat)}','${escapeHtml(r.url)}')">
+              Деталі
+            </button>
+          </td>
+        </tr>
+      `;
+    }
+
+    html += `
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+    return html;
+  }
+
+  // ✅ UPDATED: додаємо параметр url і показуємо посилання
+  window.showModal = function(name, id, price, picture, descr, cat, url) {
+    const picHtml = picture && picture !== "—"
+      ? `<img src="${picture}" alt="${name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/900x600?text=No+Image';">`
+      : `<p>Фото відсутнє</p>`;
+
+    const urlHtml = (url && url.trim().length)
+      ? `<div class="modal-actions">
+           <a class="open-link" href="${url}" target="_blank" rel="noopener">🔗 Відкрити на сайті</a>
+         </div>`
+      : `<div class="modal-actions"><span class="muted">Посилання на сайт: немає у фіді</span></div>`;
+
+    modalBody.innerHTML = `
+      <h2>${name}</h2>
+      ${urlHtml}
+      <p><strong>ID:</strong> ${id}</p>
+      <p><strong>Ціна:</strong> ${price}</p>
+      <p><strong>Категорія:</strong> ${cat}</p>
+      ${picHtml}
+      <p><strong>Повний опис:</strong><br>${escapeHtml(descr)}</p>
+    `;
+
+    modal.style.display = "block";
+  };
+
+  load();
+})();
+</script>
 </body>
 </html>
