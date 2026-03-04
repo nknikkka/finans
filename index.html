@@ -5,191 +5,219 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Прайс-лист товарів НУШ</title>
 
-  <!-- Шрифт Montserrat (тільки потрібні ваги) -->
+  <!-- Шрифт Montserrat -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --green: #2e7d32;
-      --yellow: #ffc107;
-      --light: #f8fff8;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Montserrat', Arial, sans-serif;
+      margin: 0;
       background: #f9f9f9;
-      color: #333;
-      line-height: 1.5;
     }
 
     .topbar {
       position: sticky;
       top: 0;
-      background: white;
-      border-bottom: 1px solid #ddd;
-      padding: 16px;
       z-index: 10;
+      background: #fff;
+      border-bottom: 1px solid #e6e6e6;
+      padding: 20px 16px;
     }
 
     .wrap {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 0 12px;
+      padding: 0 16px;
     }
 
-    .header {
+    .header-inner {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 20px;
     }
 
-    .logo { max-height: 60px; }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      max-height: 80px;
+      width: auto;
+    }
 
     h1 {
-      font-size: 2.2rem;
-      color: var(--green);
-      font-weight: 700;
+      margin: 0;
+      font-size: 52px;
+      color: #2e7d32;
+      font-weight: 800;
       text-align: center;
       flex: 1;
     }
 
-    .phone {
+    .phone-container {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      font-size: 20px;
       font-weight: 600;
-      color: var(--green);
-      font-size: 1.1rem;
+      color: #2e7d32;
     }
+
+    .phone-icon { font-size: 28px; }
+
+    .phone-link {
+      color: #2e7d32;
+      text-decoration: none;
+    }
+
+    .phone-link:hover { text-decoration: underline; }
 
     .controls {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       flex-wrap: wrap;
+      align-items: center;
       justify-content: center;
-      margin: 16px 0;
+      margin: 20px 0;
     }
 
     input[type="search"] {
       flex: 1;
-      min-width: 220px;
-      padding: 10px;
+      max-width: 400px;
+      padding: 12px 16px;
       border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 1rem;
+      border-radius: 10px;
+      outline: none;
+      background: #fff;
+      font-size: 16px;
     }
 
     button {
-      padding: 10px 14px;
+      padding: 12px 16px;
       border: 1px solid #ddd;
-      border-radius: 8px;
-      background: white;
+      border-radius: 10px;
+      background: #fff;
       cursor: pointer;
-      font-size: 1rem;
+      white-space: nowrap;
+      font-size: 16px;
     }
 
-    button:hover { background: #f5f5f5; }
+    button:hover { background: #f2f2f2; }
 
     .status {
+      margin-top: 10px;
+      font-weight: 700;
       text-align: center;
-      font-weight: 600;
-      margin: 12px 0;
-      color: #555;
+      font-size: 16px;
     }
 
     .error {
       color: #d32f2f;
-      text-align: center;
-      margin: 12px 0;
+      white-space: pre-wrap;
+      text-align: left;
+      margin-top: 10px;
+      font-size: 15px;
     }
 
-    .categories {
+    /* Оновлений блок категорій — горизонтально, з переносом на 2+ рядки */
+    .categories-bar {
+      margin: 15px 0;
+      padding: 12px 0;
+      background: #fff;
+      border-bottom: 1px solid #e6e6e6;
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin: 12px 0;
-      padding: 8px 0;
-      border-bottom: 1px solid #eee;
+      flex-wrap: wrap;               /* головне — перенос на новий рядок */
+      justify-content: center;       /* центрований вигляд */
+      gap: 12px 16px;                /* відступи між чіпсами */
+      max-width: 100%;
     }
 
     .cat-chip {
-      padding: 8px 16px;
-      background: #f5f5f5;
-      border-radius: 20px;
+      padding: 10px 20px;
+      background: #f0f0f0;
+      border-radius: 30px;
       cursor: pointer;
-      font-size: 0.95rem;
+      font-size: 15px;
+      font-weight: 500;
       white-space: nowrap;
+      transition: all 0.15s ease;
+      border: 1px solid #ddd;
+    }
+
+    .cat-chip:hover {
+      background: #e8e8e8;
+      transform: translateY(-1px);
     }
 
     .cat-chip.active {
-      background: var(--green);
+      background: #2e7d32;
       color: white;
+      border-color: #2e7d32;
     }
 
     .cat-chip .badge {
-      margin-left: 6px;
-      background: rgba(0,0,0,0.15);
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 0.8rem;
+      margin-left: 8px;
+      background: rgba(255,255,255,0.3);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 600;
     }
 
+    .content { padding: 10px 0; }
+
     .group {
-      margin: 20px 0;
-      border: 1px solid #eee;
-      border-radius: 10px;
-      background: white;
+      margin: 25px 0;
+      border: 1px solid #e6e6e6;
+      border-radius: 14px;
       overflow: hidden;
+      background: #fff;
     }
 
     .group-header {
-      padding: 12px 16px;
-      background: var(--light);
-      font-weight: 600;
+      padding: 14px 18px;
+      background: #f8fff8;
       cursor: pointer;
+      font-weight: 700;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .group-body {
-      padding: 0;
-      overflow-x: auto;
-    }
+    .group-header small { font-weight: normal; color: #555; }
+
+    .group-body { padding: 0; overflow-x: auto; }
 
     table {
       width: 100%;
+      min-width: 1000px;
       border-collapse: collapse;
+      background: white;
     }
 
     th, td {
-      padding: 8px 10px;
-      border: 1px solid #eee;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
       text-align: left;
     }
 
     th {
-      background: var(--green);
+      background: #2e7d32;
       color: white;
       font-weight: 600;
     }
 
-    tr:nth-child(even) { background: var(--light); }
+    tr:nth-child(even) { background: #f8fff8; }
 
     img {
-      max-width: 120px;
+      max-width: 140px;
       height: auto;
       border-radius: 6px;
       display: block;
@@ -197,13 +225,13 @@
     }
 
     .details-btn {
-      background: var(--yellow);
+      background: #ffc107;
       color: #333;
       border: none;
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 14px;
     }
 
     .details-btn:hover { background: #ffb300; }
@@ -224,7 +252,6 @@
       width: 90%;
       max-width: 700px;
       border-radius: 12px;
-      position: relative;
     }
 
     .close {
@@ -240,9 +267,11 @@
 
     @media (max-width: 768px) {
       h1 { font-size: 2rem; }
+      .categories-bar { gap: 8px 12px; }
+      .cat-chip { padding: 8px 14px; font-size: 13px; }
       table, thead, tbody, th, td, tr { display: block; }
       thead tr { position: absolute; top: -9999px; left: -9999px; }
-      tr { border: 1px solid #ddd; margin-bottom: 12px; border-radius: 8px; }
+      tr { margin-bottom: 16px; border: 1px solid #ddd; border-radius: 8px; }
       td {
         border: none;
         border-bottom: 1px solid #eee;
@@ -252,16 +281,17 @@
       }
       td:before {
         position: absolute;
-        top: 8px;
-        left: 10px;
+        top: 10px;
+        left: 12px;
         width: 45%;
         padding-right: 10px;
         white-space: nowrap;
-        font-weight: 600;
         content: attr(data-label);
         text-align: left;
+        font-weight: 600;
+        color: #555;
       }
-      td img { margin: 8px auto; }
+      td img { margin: 10px auto; }
       .details-btn { width: 100%; margin-top: 8px; }
     }
   </style>
@@ -308,7 +338,7 @@
   </div>
 
 <script>
-// Твій скрипт (без змін, він уже легкий)
+// Твій скрипт без змін (він уже оптимальний)
 (async () => {
   const statusEl = document.getElementById("status");
   const errorEl = document.getElementById("error");
@@ -507,7 +537,7 @@
     for(let i = 0; i < items.length; i++){
       const r = items[i];
       const imgTag = r.picture
-        ? `<img src="${escapeHtml(r.picture)}" alt="${escapeHtml(r.name)}" onerror="this.src='https://via.placeholder.com/120?text=Немає+фото';">`
+        ? `<img src="${escapeHtml(r.picture)}" alt="${escapeHtml(r.name)}" onerror="this.src='https://via.placeholder.com/140?text=Немає+фото';">`
         : "—";
       const descrShort = r.descr.length > 160 ? (r.descr.slice(0,160) + "...") : r.descr;
       html += `
