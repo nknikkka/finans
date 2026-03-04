@@ -5,222 +5,265 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Прайс-лист товарів НУШ</title>
 
-  <!-- Шрифт Montserrat -->
+  <!-- Шрифт Montserrat (тільки потрібні ваги) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      font-family: 'Montserrat', Arial, sans-serif;
-      margin: 0;
-      background: #f9f9f9;
+    :root {
+      --green: #2e7d32;
+      --yellow: #ffc107;
+      --light: #f8fff8;
     }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f9f9f9;
+      color: #333;
+      line-height: 1.5;
+    }
+
     .topbar {
       position: sticky;
       top: 0;
+      background: white;
+      border-bottom: 1px solid #ddd;
+      padding: 16px;
       z-index: 10;
-      background: #fff;
-      border-bottom: 1px solid #e6e6e6;
-      padding: 20px 16px;
     }
+
     .wrap {
-      max-width: 1600px;
+      max-width: 1400px;
       margin: 0 auto;
-      padding: 0 16px;
+      padding: 0 12px;
     }
-    .header-inner {
+
+    .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 20px;
+      gap: 12px;
+      margin-bottom: 16px;
     }
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .logo {
-      max-height: 80px;
-      width: auto;
-    }
+
+    .logo { max-height: 60px; }
+
     h1 {
-      margin: 0;
-      font-size: 52px;
-      color: #2e7d32;
-      font-weight: 800;
+      font-size: 2.2rem;
+      color: var(--green);
+      font-weight: 700;
       text-align: center;
       flex: 1;
     }
-    .phone-container {
+
+    .phone {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 20px;
+      gap: 8px;
       font-weight: 600;
-      color: #2e7d32;
+      color: var(--green);
+      font-size: 1.1rem;
     }
-    .phone-icon { font-size: 28px; }
-    .phone-link { color: #2e7d32; text-decoration: none; }
-    .phone-link:hover { text-decoration: underline; }
 
     .controls {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
-      align-items: center;
       justify-content: center;
-      margin: 20px 0;
+      margin: 16px 0;
     }
+
     input[type="search"] {
       flex: 1;
-      max-width: 400px;
-      padding: 12px 16px;
+      min-width: 220px;
+      padding: 10px;
       border: 1px solid #ddd;
-      border-radius: 10px;
-      outline: none;
-      background: #fff;
-      font-size: 16px;
+      border-radius: 8px;
+      font-size: 1rem;
     }
+
     button {
-      padding: 12px 16px;
+      padding: 10px 14px;
       border: 1px solid #ddd;
-      border-radius: 10px;
-      background: #fff;
+      border-radius: 8px;
+      background: white;
       cursor: pointer;
-      white-space: nowrap;
-      font-size: 16px;
+      font-size: 1rem;
     }
-    button:hover { background: #f2f2f2; }
 
-    .status { margin-top: 10px; font-weight: 700; text-align: center; font-size: 16px; }
-    .error { color: #d32f2f; white-space: pre-wrap; text-align: left; margin-top: 10px; font-size: 15px; }
+    button:hover { background: #f5f5f5; }
 
-    .categories-bar {
-      margin: 15px 0;
-      padding: 10px 0;
+    .status {
       text-align: center;
-      background: #fff;
-      border-bottom: 1px solid #e6e6e6;
+      font-weight: 600;
+      margin: 12px 0;
+      color: #555;
+    }
+
+    .error {
+      color: #d32f2f;
+      text-align: center;
+      margin: 12px 0;
+    }
+
+    .categories {
       display: flex;
       flex-wrap: wrap;
+      gap: 10px;
       justify-content: center;
-      gap: 10px 14px;
-    }
-    .cat-chip {
-      padding: 8px 18px;
-      background: #f0f0f0;
-      border-radius: 24px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.2s;
-      border: 1px solid #ddd;
-      white-space: nowrap;
-    }
-    .cat-chip:hover { background: #e0e0e0; }
-    .cat-chip.active { background: #2e7d32; color: white; border-color: #2e7d32; }
-    .cat-chip .badge {
-      margin-left: 8px;
-      background: rgba(0,0,0,0.18);
-      color: inherit;
-      padding: 3px 9px;
-      border-radius: 14px;
-      font-size: 12px;
+      margin: 12px 0;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
     }
 
-    .content { padding: 10px 0; }
-    .group { margin: 25px 0; border: 1px solid #e6e6e6; border-radius: 14px; overflow: hidden; background: #fff; }
-    .group-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: #f8fff8; cursor: pointer; font-weight: 700; }
-    .group-header small { font-weight: normal; color: #555; }
-    .group-body { padding: 0; overflow-x: auto; }
+    .cat-chip {
+      padding: 8px 16px;
+      background: #f5f5f5;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .cat-chip.active {
+      background: var(--green);
+      color: white;
+    }
+
+    .cat-chip .badge {
+      margin-left: 6px;
+      background: rgba(0,0,0,0.15);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+
+    .group {
+      margin: 20px 0;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      background: white;
+      overflow: hidden;
+    }
+
+    .group-header {
+      padding: 12px 16px;
+      background: var(--light);
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .group-body {
+      padding: 0;
+      overflow-x: auto;
+    }
 
     table {
       width: 100%;
-      min-width: 1400px;          /* ширша таблиця */
-      margin: 0 auto;
       border-collapse: collapse;
-      background: white;
-      table-layout: fixed;
     }
-    th, td {
-      padding: 8px 10px;          /* менші відступи */
-      border: 1px solid #ddd;
-      text-align: left;
-      vertical-align: top;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    th {
-      background: #2e7d32;
-      color: white;
-      position: sticky;
-      top: 0;
-      z-index: 5;
-    }
-    tr:nth-child(even) { background: #f8fff8; }
 
-    /* Ширина колонок (можеш змінювати відсотки) */
-    th:nth-child(1), td:nth-child(1) { width: 10%; }   /* Фото */
-    th:nth-child(2), td:nth-child(2) { width: 35%; }   /* Назва — ширше */
-    th:nth-child(3), td:nth-child(3) { width: 10%; }   /* ID */
-    th:nth-child(4), td:nth-child(4) { width: 10%; }   /* Ціна */
-    th:nth-child(5), td:nth-child(5) { width: 30%; }   /* Опис — ширше */
-    th:nth-child(6), td:nth-child(6) { width: 5%; }    /* Деталі */
+    th, td {
+      padding: 8px 10px;
+      border: 1px solid #eee;
+      text-align: left;
+    }
+
+    th {
+      background: var(--green);
+      color: white;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) { background: var(--light); }
 
     img {
-      max-width: 140px;
+      max-width: 120px;
       height: auto;
       border-radius: 6px;
       display: block;
       margin: 0 auto;
     }
-    .muted { color: #666; font-weight: normal; }
+
     .details-btn {
-      background: #ffc107;
+      background: var(--yellow);
       color: #333;
       border: none;
-      padding: 8px 14px;
+      padding: 6px 12px;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 14px;
-      transition: background 0.2s;
+      font-size: 0.9rem;
     }
+
     .details-btn:hover { background: #ffb300; }
 
     .modal {
       display: none;
       position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
       z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.65);
-      overflow: auto;
+      overflow-y: auto;
     }
+
     .modal-content {
-      background: #fff;
-      margin: 6% auto;
-      padding: 25px;
-      border-radius: 12px;
+      background: white;
+      margin: 40px auto;
+      padding: 20px;
       width: 90%;
-      max-width: 750px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+      max-width: 700px;
+      border-radius: 12px;
       position: relative;
     }
+
     .close {
-      color: #aaa;
-      float: right;
+      position: absolute;
+      top: 10px;
+      right: 16px;
       font-size: 32px;
-      font-weight: bold;
       cursor: pointer;
+      color: #777;
     }
-    .close:hover { color: #000; }
-    .modal img { max-width: 100%; height: auto; border-radius: 10px; margin: 15px 0; }
-    .modal h2 { margin-top: 0; color: #2e7d32; }
-    .modal p { margin: 12px 0; line-height: 1.7; font-size: 16px; }
+
+    .close:hover { color: black; }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      table, thead, tbody, th, td, tr { display: block; }
+      thead tr { position: absolute; top: -9999px; left: -9999px; }
+      tr { border: 1px solid #ddd; margin-bottom: 12px; border-radius: 8px; }
+      td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+      }
+      td:before {
+        position: absolute;
+        top: 8px;
+        left: 10px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: 600;
+        content: attr(data-label);
+        text-align: left;
+      }
+      td img { margin: 8px auto; }
+      .details-btn { width: 100%; margin-top: 8px; }
+    }
   </style>
 </head>
 <body>
@@ -229,12 +272,9 @@
     <div class="wrap">
       <div class="header-inner">
         <div class="logo-container">
-          <!-- Заміни на свій логотип -->
           <img src="https://podillyafinance.com.ua/image/catalog/logotype.png" alt="Логотип" class="logo">
         </div>
-
-        <h1>Прайс-лист товарів</h1>
-
+        <h1>Прайс-лист товарів НУШ</h1>
         <div class="phone-container">
           <span class="phone-icon">📞</span>
           <a href="tel:+380681234567" class="phone-link">+38 (068) 123-45-67</a>
@@ -243,9 +283,10 @@
 
       <div class="controls">
         <input id="q" type="search" placeholder="Пошук: назва або ID…" />
-        <button id="reloadBtn" type="button">🔄 Оновити</button>
-        <button id="clearBtn" type="button">🧹 Скинути</button>
+        <button id="reloadBtn">🔄 Оновити</button>
+        <button id="clearBtn">🧹 Скинути</button>
       </div>
+
       <div id="status" class="status">Завантаження…</div>
       <div id="error" class="error" style="display:none;"></div>
 
@@ -259,7 +300,6 @@
     </div>
   </div>
 
-  <!-- Модальне вікно -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close" id="closeModal">×</span>
@@ -268,6 +308,7 @@
   </div>
 
 <script>
+// Твій скрипт (без змін, він уже легкий)
 (async () => {
   const statusEl = document.getElementById("status");
   const errorEl = document.getElementById("error");
@@ -326,16 +367,13 @@
   function getParentCategoryName(catId) {
     let current = categoryMap.get(catId);
     if (!current) return "Без категорії";
-
     let name = current.name;
     let parentId = current.parentId;
-
     while (parentId && categoryMap.has(parentId)) {
       current = categoryMap.get(parentId);
       name = current.name;
       parentId = current.parentId;
     }
-
     return name;
   }
 
@@ -345,17 +383,13 @@
       errorEl.textContent = "";
       statusEl.textContent = "Завантаження…";
       outputEl.innerHTML = "";
-
       const resp = await fetch(FEED_URL, { cache: "no-store" });
       if (!resp.ok) throw new Error(`Не вдалося завантажити ${FEED_URL}: ${resp.status}`);
-
       const xmlText = await resp.text();
       const doc = new DOMParser().parseFromString(xmlText, "text/xml");
-
       if (doc.getElementsByTagName("parsererror").length > 0) {
         throw new Error("XML не розпарсився");
       }
-
       categoryMap.clear();
       const categories = doc.getElementsByTagName("category");
       for (const cat of categories) {
@@ -364,17 +398,14 @@
         const parentId = cat.getAttribute("parentId") || null;
         if (id) categoryMap.set(id, { name, parentId });
       }
-
       rows = [];
       const offers = doc.getElementsByTagName("offer");
       for (const el of offers) {
         const catId = textOf(el, "categoryId") || "";
         let parentCatName = "Без категорії";
-
         if (catId && categoryMap.has(catId)) {
           parentCatName = getParentCategoryName(catId);
         }
-
         rows.push({
           cat: parentCatName,
           name: readLangText(el, "name", "ua") || "—",
@@ -385,17 +416,13 @@
           _search: normalize((readLangText(el, "name", "ua") || "") + " " + (el.getAttribute("id") || "") + " " + parentCatName)
         });
       }
-
       groups.clear();
       for (const r of rows) {
         if (!groups.has(r.cat)) groups.set(r.cat, []);
         groups.get(r.cat).push(r);
       }
-
       groups = new Map([...groups.entries()].sort((a, b) => b[1].length - a[1].length));
-
       if (activeCat !== "__ALL__" && !groups.has(activeCat)) activeCat = "__ALL__";
-
       render();
     } catch (e) {
       statusEl.textContent = "Помилка";
@@ -406,15 +433,11 @@
 
   function render(){
     const q = normalize(qEl.value);
-
     renderCategories(q);
-
     let filtered = rows;
     if (activeCat !== "__ALL__") filtered = filtered.filter(r => r.cat === activeCat);
     if (q) filtered = filtered.filter(r => r._search.includes(q));
-
     statusEl.innerHTML = `Товарів: <b>${filtered.length}</b> <span class="muted">(категорія: ${escapeHtml(activeCat === "__ALL__" ? "Усі" : activeCat)})</span>`;
-
     let renderGroups;
     if (activeCat === "__ALL__") {
       const byCat = new Map();
@@ -426,7 +449,6 @@
     } else {
       renderGroups = [[activeCat, filtered]];
     }
-
     outputEl.innerHTML = renderGroups.map(([cat, items]) => renderGroup(cat, items)).join("");
   }
 
@@ -438,13 +460,11 @@
       counts.set(cat, list.length);
     }
     const total = rows.filter(r => !q || r._search.includes(q)).length;
-
     let html = `
       <div class="cat-chip ${activeCat === "__ALL__" ? "active" : ""}" data-cat="__ALL__">
         Усі <span class="badge">${total}</span>
       </div>
     `;
-
     [...groups.keys()].forEach(cat => {
       const c = counts.get(cat) || 0;
       html += `
@@ -453,9 +473,7 @@
         </div>
       `;
     });
-
     catBarEl.innerHTML = html;
-
     catBarEl.querySelectorAll(".cat-chip").forEach(chip => {
       chip.addEventListener("click", () => {
         activeCat = chip.getAttribute("data-cat");
@@ -466,7 +484,6 @@
 
   function renderGroup(cat, items){
     const groupId = "g_" + Math.abs(cat.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0));
-
     let html = `
       <div class="group">
         <div class="group-header" data-group-toggle="${groupId}">
@@ -487,27 +504,23 @@
             </thead>
             <tbody>
     `;
-
     for(let i = 0; i < items.length; i++){
       const r = items[i];
       const imgTag = r.picture
-        ? `<img src="${escapeHtml(r.picture)}" alt="${escapeHtml(r.name)}" onerror="this.src='https://via.placeholder.com/140?text=Немає+фото';">`
+        ? `<img src="${escapeHtml(r.picture)}" alt="${escapeHtml(r.name)}" onerror="this.src='https://via.placeholder.com/120?text=Немає+фото';">`
         : "—";
-
       const descrShort = r.descr.length > 160 ? (r.descr.slice(0,160) + "...") : r.descr;
-
       html += `
         <tr>
-          <td>${imgTag}</td>
-          <td>${escapeHtml(r.name)}</td>
-          <td>${escapeHtml(r.id)}</td>
-          <td>${escapeHtml(r.price)}</td>
-          <td>${escapeHtml(descrShort)}</td>
-          <td><button class="details-btn" onclick="showModal('${escapeHtml(r.name)}', '${escapeHtml(r.id)}', '${escapeHtml(r.price)}', '${escapeHtml(r.picture)}', '${escapeHtml(r.descr)}', '${escapeHtml(r.cat)}')">Деталі</button></td>
+          <td data-label="Фото">${imgTag}</td>
+          <td data-label="Назва">${escapeHtml(r.name)}</td>
+          <td data-label="ID">${escapeHtml(r.id)}</td>
+          <td data-label="Ціна">${escapeHtml(r.price)}</td>
+          <td data-label="Опис">${escapeHtml(descrShort)}</td>
+          <td data-label="Деталі"><button class="details-btn" onclick="showModal('${escapeHtml(r.name)}', '${escapeHtml(r.id)}', '${escapeHtml(r.price)}', '${escapeHtml(r.picture)}', '${escapeHtml(r.descr)}', '${escapeHtml(r.cat)}')">Деталі</button></td>
         </tr>
       `;
     }
-
     html += `
             </tbody>
           </table>
@@ -526,7 +539,6 @@
       ${picture ? `<img src="${escapeHtml(picture)}" alt="${escapeHtml(name)}">` : "<p>Фото відсутнє</p>"}
       <p><strong>Повний опис:</strong><br>${escapeHtml(descr)}</p>
     `;
-
     modalBody.innerHTML = html;
     modal.style.display = "block";
   };
