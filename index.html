@@ -1,621 +1,1056 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Прайс-лист товарів НУШ</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>FitCore</title>
 
-  <style>
-    body{margin:0;font-family:Montserrat,Arial,sans-serif;background:#f9f9f9;color:#222;}
+	<link rel="icon" type="image/x-icon" href="assets/images/favicon.png">
 
-    .site-header{
-      background:linear-gradient(135deg,#2e7d32,#4caf50);
-      color:#fff;position:sticky;top:0;z-index:100;
-      box-shadow:0 3px 10px rgba(0,0,0,.15);
-    }
-    .header-container{
-      max-width:1400px;margin:auto;display:flex;align-items:center;justify-content:space-between;
-      padding:20px;gap:30px;
-    }
-    .site-title{font-size:38px;font-weight:800;letter-spacing:1px;white-space:nowrap;}
-    .contacts{display:flex;flex-direction:column;gap:6px;font-size:16px;align-items:flex-end;}
-    .contact-item{display:flex;align-items:center;gap:8px;line-height:1.2;}
-    .contact-item span{font-weight:700;}
-    .contacts a{color:#fff;text-decoration:none;}
-    .contacts a:hover{text-decoration:underline;}
-    @media (max-width:768px){
-      .header-container{flex-direction:column;align-items:flex-start;text-align:left;gap:10px;padding:16px;}
-      .site-title{font-size:26px;white-space:normal;line-height:1.15;}
-      .contacts{align-items:flex-start;font-size:14px;}
-    }
+	<!-- Google-Fonts -->
 
-    .wrap{max-width:1400px;margin:0 auto;padding:0 16px;}
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
-    .controls{
-      display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center;
-      margin:16px 0 10px;
-    }
-    input[type="search"]{
-      flex:1;max-width:520px;min-width:260px;
-      padding:12px 16px;border:1px solid #ddd;border-radius:12px;outline:none;background:#fff;font-size:16px;
-    }
-    button{
-      padding:12px 16px;border:1px solid #ddd;border-radius:12px;background:#fff;cursor:pointer;
-      white-space:nowrap;font-size:16px;
-    }
-    button:hover{background:#f2f2f2;}
-    @media (max-width:768px){
-      .controls{justify-content:stretch;gap:10px;}
-      input[type="search"]{max-width:100%;min-width:0;width:100%;}
-      .controls button{flex:1;}
-    }
+	<!-- Font Awesome -->
 
-    .status{margin:8px 0 10px;font-weight:800;text-align:center;font-size:16px;}
-    .muted{color:#666;font-weight:600;}
-    .error{
-      color:#d32f2f;white-space:pre-wrap;text-align:left;margin:10px auto 0;
-      max-width:1200px;font-size:15px;display:none;
-    }
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
 
-    .cat-wrap{
-      margin:12px 0 18px;padding:12px;background:#fff;border:1px solid #e6e6e6;border-radius:14px;
-    }
-    .cat-title{font-weight:800;color:#2e7d32;font-size:14px;margin-bottom:10px;}
-    .categories-bar{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 12px;}
+	<!-- Bootstrap -->
 
-    .cat-chip{
-      padding:9px 16px;background:#f2f2f2;border-radius:999px;cursor:pointer;font-size:14px;transition:.2s;
-      border:1px solid #ddd;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      user-select:none;
-    }
-    .cat-chip:hover{background:#e9f7ea;border-color:#bfe3c2;}
-    .cat-chip.active{
-      background:linear-gradient(135deg,#2e7d32,#66bb6a);
-      color:#fff;border-color:#2e7d32;
-    }
-    .cat-chip .badge{
-      background:rgba(0,0,0,.12);color:inherit;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:800;
-    }
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    .content{padding:0 0 18px;}
+	<!-- Carousel -->
 
-    .group{
-      margin:18px 0;border:1px solid #e6e6e6;border-radius:14px;overflow:hidden;background:#fff;
-    }
-    .group-header{
-      display:flex;justify-content:space-between;align-items:center;padding:14px 18px;
-      background:linear-gradient(90deg,rgba(255,193,7,.20),rgba(46,125,50,.10));
-      cursor:pointer;font-weight:800;user-select:none;gap:12px;
-    }
-    .group-header small{font-weight:700;color:#555;}
-    .group-body{padding:0;overflow-x:auto;}
+	<link rel="stylesheet" type="text/css" href="assets/css/owl.carousel.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/owl.theme.default.min.css">
 
-    table{width:90%;max-width:90%;margin:0 auto;border-collapse:collapse;background:#fff;table-layout:auto;}
-    th,td{padding:8px 10px;border:1px solid #ddd;text-align:left;vertical-align:top;}
-    th{background:#2e7d32;color:#fff;position:sticky;top:0;z-index:5;}
-    tr:nth-child(even){background:#f8fff8;}
-    img{max-width:140px;height:auto;border-radius:8px;display:block;margin:0 auto;}
+	<!-- Venobox -->
 
-    .details-btn{
-      background:#ffc107;color:#333;border:none;padding:8px 14px;border-radius:10px;cursor:pointer;
-      font-size:14px;font-weight:800;transition:background .2s,transform .15s;
-    }
-    .details-btn:hover{background:#ffb300;transform:translateY(-1px);}
+	<link rel="stylesheet" type="text/css" href="assets/css/venobox.min.css">
 
-    .load-more-wrap{
-      display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:12px 0 18px;
-    }
-    .btn-primary{border:none;background:linear-gradient(135deg,#2e7d32,#66bb6a);color:#fff;font-weight:800;}
-    .btn-primary:hover{filter:brightness(0.95);}
-    .btn-warning{border:none;background:linear-gradient(135deg,#ffc107,#ffb300);color:#1a1a1a;font-weight:800;}
-    .btn-warning:hover{filter:brightness(0.97);}
+	<!-- Assest File -->
 
-    /* MODAL */
-    .modal{
-      display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;
-      background:rgba(0,0,0,.65);overflow:auto;padding:16px;
-    }
-    .modal-content{
-      background:#fff;margin:4% auto;padding:22px;border-radius:14px;width:min(820px,94%);
-      box-shadow:0 10px 40px rgba(0,0,0,.35);position:relative;
-    }
-    .close{
-      color:#aaa;position:absolute;right:14px;top:10px;font-size:32px;font-weight:bold;cursor:pointer;line-height:1;
-    }
-    .close:hover{color:#000;}
-    .modal img{max-width:100%;height:auto;border-radius:12px;margin:15px 0;}
-    .modal h2{
-      margin-top:0;color:#2e7d32;
-      overflow-wrap:anywhere;word-break:break-word;
-    }
-    .modal p{
-      margin:12px 0;line-height:1.7;font-size:16px;
-      overflow-wrap:anywhere;word-break:break-word;
-    }
-    .modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin: 10px 0 6px;}
-    .open-link{
-      display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;text-decoration:none;
-      font-weight:800;border:1px solid #ddd;background:linear-gradient(135deg,#2e7d32,#66bb6a);color:#fff;
-    }
-    .open-link:hover{filter:brightness(0.95);}
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
-    /* ✅ Responsive tweaks */
-    @media (max-width: 900px){
-      table{width:100%;max-width:100%;}
-      .group-body{overflow-x:visible;}
-    }
-
-    /* ✅ Card view on mobile */
-    @media (max-width: 640px){
-      th{position:static;}
-      table, thead, tbody, th, td, tr{display:block;width:100%;}
-      thead{display:none;}
-      tbody{padding:10px 10px 14px;}
-
-      tr{
-        background:#fff;
-        border:1px solid #e6e6e6;
-        border-radius:14px;
-        padding:12px;
-        margin:10px 0;
-        box-shadow:0 6px 18px rgba(0,0,0,.06);
-      }
-      tr:nth-child(even){background:#fff;}
-
-      td{border:none;padding:6px 0;}
-
-      /* labels */
-      td:nth-child(1)::before{content:"Фото";display:block;font-weight:800;color:#2e7d32;margin-bottom:6px;}
-      td:nth-child(2)::before{content:"Назва";display:block;font-weight:800;color:#2e7d32;margin-bottom:2px;}
-      td:nth-child(3)::before{content:"Артикул";display:block;font-weight:800;color:#2e7d32;margin-bottom:2px;}
-      td:nth-child(4)::before{content:"Ціна";display:block;font-weight:800;color:#2e7d32;margin-bottom:2px;}
-      td:nth-child(5)::before{content:"Опис";display:block;font-weight:800;color:#2e7d32;margin-bottom:2px;}
-      td:nth-child(6)::before{content:"Деталі";display:block;font-weight:800;color:#2e7d32;margin-bottom:6px;}
-
-      /* ✅ fix no-wrap / long strings */
-      td{
-        overflow-wrap:anywhere;
-        word-break:break-word;
-        white-space:normal;
-      }
-
-      /* ✅ smaller image on mobile */
-      img{
-        max-width:130px;
-        width:100%;
-        height:auto;
-        border-radius:12px;
-        margin:0;
-      }
-
-      /* ✅ smaller button on mobile */
-      .details-btn{
-        width:auto;
-        padding:8px 10px;
-        font-size:13px;
-        border-radius:12px;
-      }
-    }
-
-    /* ✅ FULLSCREEN MODAL on mobile */
-    @media (max-width: 520px){
-      .modal{
-        padding:0;
-        background:rgba(0,0,0,.75);
-      }
-      .modal-content{
-        width:100%;
-        min-height:100%;
-        margin:0;
-        border-radius:0;
-        padding:16px 14px 22px;
-        box-shadow:none;
-      }
-      .close{
-        position:sticky;
-        top:0;
-        right:auto;
-        margin-left:auto;
-        display:inline-block;
-        background:#fff;
-        border:1px solid #eee;
-        border-radius:12px;
-        padding:6px 12px;
-        z-index:5;
-      }
-      .modal p{font-size:15px;}
-      .open-link{width:100%;justify-content:center;}
-    }
-  </style>
 </head>
-
 <body>
 
-<header class="site-header">
-  <div class="header-container">
-    <div class="site-title">Прайс-лист товарів НУШ</div>
+	<!-- Start Site-Header -->
 
-    <div class="contacts">
-      <div class="contact-item">
-        <span>📞 Телефон:</span>
-        <a href="tel:+380681234567">+38 (068) 123-45-67</a>
-      </div>
-      <div class="contact-item">
-        <span>✉ Gmail:</span>
-        <a href="mailto:office@podillyafinance.com.ua">office@podillyafinance.com.ua</a>
-      </div>
-      <div class="contact-item">
-        <span>🌐 Сайт:</span>
-        <a href="https://podillyafinance.com.ua/" target="_blank" rel="noopener">podillyafinance.com.ua</a>
-      </div>
-    </div>
-  </div>
-</header>
+	<header class="site-header">
+		<div class="top-bar">
+			<div class="container">
+				<div class="top-left">
+					<div class="mail">
+						<a href="mailto:info@example.com"><i class="fa-solid fa-envelope"></i>info@example.com</a>
+					</div>
+					<div class="location">
+						<i class="fa-solid fa-location-dot"></i>6391 Elgin St. Celina, 10299
+					</div>
+				</div>
+				<div class="top-right">
+					<div class="phone">
+						<a href="tel:6295550129"><i class="fa-solid fa-phone"></i>(629) 555-0129</a>
+					</div>
+					<div class="separator"></div>
+					<div class="social">
+						<a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+						<a href="#"><i class="fa-brands fa-instagram"></i></a>
+						<a href="#"><i class="fa-brands fa-youtube"></i></a>
+						<a href="#"><i class="fa-brands fa-linkedin"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="menu-bar">
+				<div class="site-logo">
+					<a href="index.html"><img src="assets/images/site-logo.png" alt="logo"></a>
+				</div>
+				<div class="main-menu">
+					<ul>
+						<li><a href="index.html">Home</a></li>
+						<li><a href="about.html">About</a></li>
+						<li><a href="classes.html">Classes</a></li>
+						<li class="dropdown">
+							<a href="#">Pages<i class="fa-solid fa-chevron-down"></i></a>
+							<ul class="sub-menu">
+								<li><a href="class-schedule.html">Class Schedule</a></li>
+								<li><a href="gallery.html">Gallery</a></li>
+								<li><a href="our-pricing.html">Our Pricing</a></li>
+								<li><a href="trainers.html">Trainers</a></li>
+								<li><a href="blog-details.html">Blog Details</a></li>
+								<li><a href="class-details.html">Class Details</a></li>
+							</ul>
+						</li>
+						<li><a href="blog.html">Blog</a></li>
+						<li><a href="contact.html">contact</a></li>
+					</ul>
+				</div>
+				<div class="button">
+					<a href="#" class="btn">Join Now<i class="fa-solid fa-angles-right"></i></a>
+				</div>
+			</div>
+		</div>	
+	</header>
 
-<div class="wrap">
-  <div class="controls">
-    <input id="q" type="search" placeholder="Пошук: назва або артикул…" />
-    <button id="reloadBtn" type="button">🔄 Оновити</button>
-    <button id="clearBtn" type="button">🧹 Скинути</button>
-  </div>
+	<!-- End Site-Header -->
 
-  <div id="status" class="status">Завантаження…</div>
-  <div id="error" class="error"></div>
+	<!-- Start Mobail Menu -->
 
-  <div class="cat-wrap">
-    <div class="categories-bar" id="catBar"></div>
-  </div>
+	<div class="mobile-menu">
+		<div class="menu-bar">
+			<div class="site-logo">
+				<a href="index.html">
+					<img src="assets/images/mobail-logo.png" alt="logo">
+				</a>
+			</div>
+			<div class="menu-toggle">
+				<i class="fa-solid fa-bars"></i>
+			</div>
+		</div>
+		<div class="menu-content">
+			<div class="menu">
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><a href="about.html">About</a></li>
+					<li><a href="classes.html">Classes</a></li>
+					<li class="mobail-dropdown">
+						<a href="#">Pages<i class="fa-solid fa-chevron-down"></i></a>
+						<ul class="mobail-submenu">
+							<li><a href="class-schedule.html">Class Schedule</a></li>
+							<li><a href="gallery.html">Gallery</a></li>
+							<li><a href="our-pricing.html">Our Pricing</a></li>
+							<li><a href="trainers.html">Trainers</a></li>
+							<li><a href="blog-details.html">Blog Details</a></li>
+							<li><a href="class-details.html">Class Details</a></li>
+						</ul>
+					</li>
+					<li><a href="blog.html">Blog</a></li>
+					<li><a href="contact.html">contact</a></li>
+				</ul>
+			</div>
+			<div class="info">
+				<h3 class="title">Contact Info</h3>
+				<div class="info-box">
+					<i class="fa-solid fa-location-dot"></i>
+					6391 Elgin St. Celina, Delaware 10299
+				</div>
+				<div class="info-box">
+					<i class="fa-solid fa-phone"></i>
+					<a href="#">(209) 555-0104</a>
+				</div>
+				<div class="info-box">
+					<i class="fa-solid fa-envelope"></i>
+					<a href="#">info@example.com</a>
+				</div>
+			</div>
+			<div class="component">
+				<div class="search-icon">
+					<i class="fa-solid fa-magnifying-glass"></i>
+				</div>
+				<div class="button">
+					<a href="#" class="btn">Get A Quote<i class="fa-solid fa-arrow-right"></i></a>
+				</div>
+			</div>
+		</div>
+	</div>
 
-  <div class="content">
-    <div id="output"></div>
+	<!-- End Mobail Menu -->
 
-    <div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
-      <button id="moreBtn" class="btn-primary" type="button">Показати ще</button>
-      <button id="allBtn" class="btn-warning" type="button">Показати всі</button>
-      <button id="collapseBtn" type="button">Згорнути до 200</button>
-    </div>
-  </div>
-</div>
+	<!-- Start Hero Section -->
 
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <span class="close" id="closeModal">×</span>
-    <div id="modalBody"></div>
-  </div>
-</div>
+	<section class="hero-section">
+		<div class="hero-carousel owl-carousel">
+			<div class="hero-content" style="background-image: url(assets/images/hero1-bg.jpg);">
+				<div class="container">
+					<h5><span></span>Welcome to Gymix Gym</h5>
+					<h1 class="heading">Transform with a Fitness Expert</h1>
+					<p class="discription">Achieve your peak fitness with expert guidance, personalized workouts, and a supportive community. </p>
+					<div class="hero-about">
+						<div class="button">
+							<a href="#" class="btn">More About Us<i class="fa-solid fa-arrow-right"></i></a>
+						</div>
+						<div class="box">
+							<div class="image-box">
+								<img src="assets/images/hero-img.png" alt="images">
+							</div>
+							<div class="count-box">
+								<h4 class="number">750k<span>+</span></h4>
+								<p>Happy customers</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="hero-content" style="background-image: url(assets/images/hero1-bg2.jpg);">
+				<div class="container">
+					<h5><span></span>Welcome to Gymix Gym</h5>
+					<h1 class="heading">Transform with a Fitness Expert</h1>
+					<p class="discription">Achieve your peak fitness with expert guidance, personalized workouts, and a supportive community. </p>
+					<div class="hero-about">
+						<div class="button">
+							<a href="#" class="btn">More About Us<i class="fa-solid fa-arrow-right"></i></a>
+						</div>
+						<div class="box">
+							<div class="image-box">
+								<img src="assets/images/hero-img.png" alt="images">
+							</div>
+							<div class="count-box">
+								<h4 class="number">750k<span>+</span></h4>
+								<p>Happy customers</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<!-- End Hero Section -->
 
-<script>
-(async () => {
-  const statusEl = document.getElementById("status");
-  const errorEl = document.getElementById("error");
-  const outputEl = document.getElementById("output");
-  const catBarEl = document.getElementById("catBar");
-  const qEl = document.getElementById("q");
-  const reloadBtn = document.getElementById("reloadBtn");
-  const clearBtn = document.getElementById("clearBtn");
+	<!-- Start About  Section -->
 
-  const loadMoreWrap = document.getElementById("loadMoreWrap");
-  const moreBtn = document.getElementById("moreBtn");
-  const allBtn = document.getElementById("allBtn");
-  const collapseBtn = document.getElementById("collapseBtn");
+	<section class="about-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 col-xl-6">
+					<div class="about-left">
+						<div class="image">
+							<img src="assets/images/about-img-1.png" alt="images">
+						</div>
+						<div class="text-box">
+							<div class="count">
+								<h3>20+</h3>
+								<p>Years</p>
+							</div>
+							<div class="text">
+								<p>Experience</p>
+							</div>
+						</div>
+						<div class="image-box">
+							<img src="assets/images/about-img-2.png" alt="images">
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-12 col-xl-6">
+					<div class="about-right">
+						<div class="section-title">
+							<h4 class="subtitle"><span>About Us</span></h4>
+							<h1 class="title">Elevate Your Ultimate Fitness Journey</h1>
+						</div>
+						<p class="discription">Achieve your health goals with expert trainers, state-of-the-art equipment, and a supportive community designed to empower your fitness journey.</p>
+						<div class="list-box">
+							<div class="list">
+								<ul>
+									<li><i class="fa-solid fa-bolt"></i><span>Personalized Workout Programs</span></li>
+									<li><i class="fa-solid fa-bolt"></i><span>Complete Support Throughout</span></li>
+									<li><i class="fa-solid fa-bolt"></i><span>Proven Results You Can Trust</span></li>
+								</ul>
+							</div>
+							<div class="video">
+								<a data-autoplay="true" data-vbtype="video" href="https://youtu.be/Et_3r2uugrY?si=q52f_-j68bErgxzO" class="venobox icon"><i class="fa fa-play"></i><span class="cricle-1"></span><span class="cricle-2"></span><span class="cricle-3"></span></a>
+							</div>
+						</div>
+						<div class="button">
+							<a href="#" class="btn">Get Started Today<i class="fa-solid fa-arrow-right"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-  const modal = document.getElementById("modal");
-  const modalBody = document.getElementById("modalBody");
-  const closeModal = document.getElementById("closeModal");
+	<!-- End About  Section -->
 
-  const FEED_URL = "PriceList.xml";
+	<!-- Start Marquee Section -->
 
-  const PAGE_SIZE = 200;
-  let visibleLimit = PAGE_SIZE;
+	<section class="marquee-section">
+		<div class="marquee-box">
+			<div class="marquee-item">
+				<span class="text">Yoga Flow</span>  
+				<span class="dots"></span>
+				<span class="text">Spin & Sweat</span>
+				<span class="dots"></span>
+				<span class="text">Pilates Core</span>
+				<span class="dots"></span>
+				<span class="text">CrossFit</span>
+				<span class="dots"></span>
+				<span class="text">Core Crusher</span>
+				<span class="dots"></span>
+				<span class="text">Pilates Reformer</span>
+				<span class="dots"></span>
+				<span class="text">Zumba Energy</span>
+				<span class="dots"></span>
+			</div>
+			<div class="marquee-item">
+				<span class="text">Yoga Flow</span>  
+				<span class="dots"></span>
+				<span class="text">Spin & Sweat</span>
+				<span class="dots"></span>
+				<span class="text">Pilates Core</span>
+				<span class="dots"></span>
+				<span class="text">CrossFit</span>
+				<span class="dots"></span>
+				<span class="text">Core Crusher</span>
+				<span class="dots"></span>
+				<span class="text">Pilates Reformer</span>
+				<span class="dots"></span>
+				<span class="text">Zumba Energy</span>
+				<span class="dots"></span>
+			</div>
+		</div>
+	</section>
 
-  let rows = [];
-  let activeCat = "__ALL__";
-  let groups = new Map();
-  let categoryMap = new Map();
+	<!-- End Marquee Section -->
 
-  reloadBtn.addEventListener("click", () => load());
-  clearBtn.addEventListener("click", () => {
-    qEl.value = "";
-    activeCat = "__ALL__";
-    visibleLimit = PAGE_SIZE;
-    render();
-  });
-  qEl.addEventListener("input", () => {
-    visibleLimit = PAGE_SIZE;
-    render();
-  });
+	<!-- Start Classes Section -->
 
-  moreBtn.addEventListener("click", () => { visibleLimit += PAGE_SIZE; render(); });
-  allBtn.addEventListener("click", () => { visibleLimit = Number.MAX_SAFE_INTEGER; render(); });
-  collapseBtn.addEventListener("click", () => {
-    visibleLimit = PAGE_SIZE;
-    render();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
+	<section class="classes-section">
+		<div class="container">
+			<div class="top">
+				<div class="section-title">
+					<h4 class="subtitle"><span>Our Classes</span></h4>
+					<h1 class="title">Your Ultimate Fitness Journey Starts Here</h1>
+				</div>
+				<div class="button">
+					<a href="#" class="btn">View Classes<i class="fa-solid fa-arrow-right"></i></a>
+				</div>
+			</div>
+			<div class="main-accordion">
+				<div class="accordion-header">
+					<div class="class-title">
+						<h3>Spin & Sweat</h3>
+					</div>
+					<div class="class-box">
+						<div class="item">
+							<span class="heading">Level:</span>
+							<span class="data">Low</span>
+						</div>
+						<span class="separetor"></span>
+						<div class="item">
+							<span class="heading">Duration:</span>
+							<span class="data">45 mins</span>
+						</div>
+						<span class="separetor"></span>
+						<div class="item">
+							<span class="heading">Session:</span>
+							<span class="data">3 / month</span>
+						</div>
+					</div>
+					<div class="class-button">
+						<a href="#"><i class="fa-solid fa-arrow-right"></i></a>
+					</div>
+				</div>
+				<div class="accordion-content">
+					<div class="content-box">
+						<div class="content-left">
+							<p>Build strength, endurance, and fitness with dynamic workouts and expert guidance for a balanced, powerful physique.</p>
+							<p class="title">Key Benefits:</p>
+							<ul>
+								<li>Boosts strength and stamina.</li>
+								<li>Enhances overall athletic performance.</li>
+							</ul>
+						</div>
+						<div class="content-right">
+							<img src="assets/images/class-img-01.jpg" alt="images">
+						</div>
+					</div>
+				</div>
+				<div class="accordion-header">
+					<div class="class-title">
+						<h3>HIIT Power Hour</h3>
+					</div>
+					<div class="class-box">
+						<div class="item">
+							<span class="heading">Level:</span>
+							<span class="data">Low</span>
+						</div>
+						<span class="separetor"></span>
+						<div class="item">
+							<span class="heading">Duration:</span>
+							<span class="data">45 mins</span>
+						</div>
+						<span class="separetor"></span>
+						<div class="item">
+							<span class="heading">Session:</span>
+							<span class="data">3 / month</span>
+						</div>
+					</div>
+					<div class="class-button">
+						<a href="#"><i class="fa-solid fa-arrow-right"></i></a>
+					</div>
+				</div>
+				<div class="accordion-content">
+					<div class="content-box">
+						<div class="content-left">
+							<p>Build strength, endurance, and fitness with dynamic workouts and expert guidance for a balanced, powerful physique.</p>
+							<p class="title">Key Benefits:</p>
+							<ul>
+								<li>Boosts strength and stamina.</li>
+								<li>Enhances overall athletic performance.</li>
+							</ul>
+						</div>
+						<div class="content-right">
+							<img src="assets/images/class-img-2.png" alt="images">
+						</div>
+					</div>
+				</div>
+				<div class="accordion-header">
+					<div class="class-title">
+						<h3>Yoga Flow Basics</h3>
+					</div>
+					<div class="class-box">
+						<div class="item">
+							<span class="heading">Level:</span>
+							<span class="data">Low</span>
+						</div>
+						<span class="separetor"></span>
+						<div class="item">
+							<span class="heading">Duration:</span>
+							<span class="data">45 mins</span>
+						</div>
+						<span class="separetor"></span>
+						<div class="item">
+							<span class="heading">Session:</span>
+							<span class="data">3 / month</span>
+						</div>
+					</div>
+					<div class="class-button">
+						<a href="#"><i class="fa-solid fa-arrow-right"></i></a>
+					</div>
+				</div>
+				<div class="accordion-content">
+					<div class="content-box">
+						<div class="content-left">
+							<p>Build strength, endurance, and fitness with dynamic workouts and expert guidance for a balanced, powerful physique.</p>
+							<p class="title">Key Benefits:</p>
+							<ul>
+								<li>Boosts strength and stamina.</li>
+								<li>Enhances overall athletic performance.</li>
+							</ul>
+						</div>
+						<div class="content-right">
+							<img src="assets/images/class-img-3.png" alt="images">
+						</div>
+					</div>
+				</div>
+				<div class="accordion-header">
+					<div class="class-title">
+						<h3>Pilates Reformer</h3>
+					</div>
+					<div class="class-box">
+						<div class="item">
+							<span class="heading">Level:</span>
+							<span class="data">Low</span>
+						</div>
+						<span class="separetor"></span>
+						<div class="item">
+							<span class="heading">Duration:</span>
+							<span class="data">45 mins</span>
+						</div>
+						<span class="separetor"></span>
+						<div class="item">
+							<span class="heading">Session:</span>
+							<span class="data">3 / month</span>
+						</div>
+					</div>
+					<div class="class-button">
+						<a href="#"><i class="fa-solid fa-arrow-right"></i></a>
+					</div>
+				</div>
+				<div class="accordion-content">
+					<div class="content-box">
+						<div class="content-left">
+							<p>Build strength, endurance, and fitness with dynamic workouts and expert guidance for a balanced, powerful physique.</p>
+							<p class="title">Key Benefits:</p>
+							<ul>
+								<li>Boosts strength and stamina.</li>
+								<li>Enhances overall athletic performance.</li>
+							</ul>
+						</div>
+						<div class="content-right">
+							<img src="assets/images/class-img-4.png" alt="images">
+						</div>
+					</div>
+				</div>
+				<div class="accordion-header">
+					<div class="class-title">
+						<h3>Zumba Energy</h3>
+					</div>
+					<div class="class-box">
+						<div class="item">
+							<span class="heading">Level:</span>
+							<span class="data">Low</span>
+						</div>
+						<span class="separetor"></span>
+						<div class="item">
+							<span class="heading">Duration:</span>
+							<span class="data">45 mins</span>
+						</div>
+						<span class="separetor"></span>
+						<div class="item">
+							<span class="heading">Session:</span>
+							<span class="data">3 / month</span>
+						</div>
+					</div>
+					<div class="class-button">
+						<a href="#"><i class="fa-solid fa-arrow-right"></i></a>
+					</div>
+				</div>
+				<div class="accordion-content">
+					<div class="content-box">
+						<div class="content-left">
+							<p>Build strength, endurance, and fitness with dynamic workouts and expert guidance for a balanced, powerful physique.</p>
+							<p class="title">Key Benefits:</p>
+							<ul>
+								<li>Boosts strength and stamina.</li>
+								<li>Enhances overall athletic performance.</li>
+							</ul>
+						</div>
+						<div class="content-right">
+							<img src="assets/images/class-img-5.png" alt="images">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-  closeModal.onclick = () => modal.style.display = "none";
-  window.onclick = (event) => { if (event.target === modal) modal.style.display = "none"; };
+	<!-- End Classes Section -->
 
-  function textOf(parent, tagName) {
-    const el = parent.getElementsByTagName(tagName)[0];
-    return el ? (el.textContent || "").trim() : "";
-  }
+	<!-- Start Choose Section -->
 
-  function readLangText(parent, tagName, lang = "ua") {
-    const els = Array.from(parent.getElementsByTagName(tagName));
-    if (!els.length) return "";
-    const exact = els.find(e => (e.getAttribute("lang") || "").toLowerCase() === lang.toLowerCase());
-    return ((exact ? exact.textContent : els[0].textContent) || "").trim();
-  }
+	<section class="choose-us-section">
+		<div class="section-title">
+			<h4 class="subtitle"><span>Why Choose Us</span></h4>
+			<h1 class="title">Top trainers, best equipment, supportive community</h1>
+		</div>	
+	</section>
 
-  function escapeHtml(s) {
-    return String(s)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
+	<!-- End Choose Section -->
 
-  function normalize(s) { return String(s || "").toLowerCase().replace(/\s+/g, " ").trim(); }
+	<!-- Start Join Section -->
 
-  function getParentCategoryName(catId) {
-    let current = categoryMap.get(catId);
-    if (!current) return "Без категорії";
-    let name = current.name;
-    let parentId = current.parentId;
-    while (parentId && categoryMap.has(parentId)) {
-      current = categoryMap.get(parentId);
-      name = current.name;
-      parentId = current.parentId;
-    }
-    return name;
-  }
+	<section class="join-section">
+		<div class="container">
+			<div class="join-content">
+				<div class="content-left">
+					<p>Achieve your health goals with expert trainers, state-of-the-art equipment, and a supportive community designed to empower your fitness journey.</p>
+					<div class="box">
+						<span class="number">01</span>
+						<span class="text">Unparalleled Personal Training</span>
+					</div>
+					<div class="box middle-item">
+						<span class="text two">Studios and luxury amenities</span>
+						<span class="number two">02</span>
+					</div>
+					<div class="box">
+						<span class="number">03</span>
+						<span class="text">Unrivaled Group Fitness classes</span>
+					</div>
+				</div>
+				<div class="content-right">
+					<img src="assets/images/join-img.png" alt="images">
+				</div>
+			</div>
+		</div>
+	</section>
 
-  async function load() {
-    try {
-      errorEl.style.display = "none";
-      errorEl.textContent = "";
+	<!-- End Join Section -->
 
-      statusEl.textContent = "Завантаження…";
-      outputEl.innerHTML = "";
-      catBarEl.innerHTML = "";
-      visibleLimit = PAGE_SIZE;
+	<!-- Work Process -->
 
-      const resp = await fetch(FEED_URL, { cache: "no-store" });
-      if (!resp.ok) throw new Error(`Не вдалося завантажити ${FEED_URL}: ${resp.status}`);
+	<section class="work-process">
+		<div class="container">
+			<div class="section-title">
+				<h4 class="subtitle"><span>WORK PROCESS</span></h4>
+				<h1 class="title">Fitness Made Simple</h1>
+			</div>
+			<div class="row">
+				<div class="col-md-6 col-xl-3">
+					<div class="process-box">
+						<div class="content-wrap">
+							<div class="image">
+								<div class="img-wrapper">
+									<img src="assets/images/process-img1.png" alt="images">
+								</div>
+								<div class="process-icon">
+									<img src="assets/images/icon-1.png" alt="icon">
+								</div>
+							</div>
+							<div class="content">
+								<h3 class="title">Workout Planning</h3>
+								<p class="description">Elevate your fitness level by combining strength</p>
+							</div>
+						</div>
+						<div class="number">01</div>
+					</div>
+				</div>
+				<div class="col-md-6 col-xl-3">
+					<div class="process-box even">
+						<div class="content-wrap">
+							<div class="image">
+								<div class="img-wrapper">
+									<img src="assets/images/process-img2.png" alt="images">
+								</div>
+								<div class="process-icon">
+									<img src="assets/images/icon-2.png" alt="icon">
+								</div>
+							</div>
+							<div class="content">
+								<h3 class="title">Gym Movement</h3>
+								<p class="description">Elevate your fitness level by combining strength</p>
+							</div>
+						</div>
+						<div class="number">02</div>
+					</div>
+				</div>
+				<div class="col-md-6 col-xl-3">
+					<div class="process-box">
+						<div class="content-wrap">
+							<div class="image">
+								<div class="img-wrapper">
+									<img src="assets/images/process-img3.png" alt="images">
+								</div>
+								<div class="process-icon">
+									<img src="assets/images/icon-3.png" alt="icon">
+								</div>
+							</div>
+							<div class="content">
+								<h3 class="title">Fitness Practice</h3>
+								<p class="description">Elevate your fitness level by combining strength</p>
+							</div>
+						</div>
+						<div class="number">03</div>
+					</div>
+				</div>
+				<div class="col-md-6 col-xl-3">
+					<div class="process-box even">
+						<div class="content-wrap">
+							<div class="image">
+								<div class="img-wrapper">
+									<img src="assets/images/process-img4.png" alt="images">
+								</div>
+								<div class="process-icon">
+									<img src="assets/images/icon-4.png" alt="icon">
+								</div>
+							</div>
+							<div class="content">
+								<h3 class="title">Achievement</h3>
+								<p class="description">Elevate your fitness level by combining strength</p>
+							</div>
+						</div>
+						<div class="number">04</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="shape-img">
+			<img src="assets/images/work-line.png" alt="shape">
+		</div>
+	</section>
 
-      const xmlText = await resp.text();
-      const doc = new DOMParser().parseFromString(xmlText, "text/xml");
+	<!-- Start Team Member Section -->
 
-      if (doc.getElementsByTagName("parsererror").length > 0) throw new Error("XML не розпарсився");
+	<section class="team-section">
+		<div class="container">
+			<div class="top">
+				<div class="section-title">
+					<h4 class="subtitle"><span>Team Member</span></h4>
+					<h1 class="title">Our Expert Trainers </h1>
+				</div>
+				<div class="button">
+					<a href="#" class="btn">View Classes<i class="fa-solid fa-arrow-right"></i></a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="team-member">
+				<div class="member-box">
+					<div class="images">
+						<img src="assets/images/member-1.png" alt="images">
+					</div>
+					<div class="bio">
+						<h4 class="name">Harvey jones</h4>
+						<p>Body Building</p>
+						<ul class="social-icons">
+							<li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+							<li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+							<li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+							<li><a href="#"><i class="fa-brands fa-pinterest-p"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="member-box">
+					<div class="images">
+						<img src="assets/images/member-2.png" alt="images">
+					</div>
+					<div class="bio">
+						<h4 class="name">David Harris</h4>
+						<p>Strength Trainer</p>
+						<ul class="social-icons">
+							<li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+							<li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+							<li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+							<li><a href="#"><i class="fa-brands fa-pinterest-p"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="member-box">
+					<div class="images">
+						<img src="assets/images/member-3.png" alt="images">
+					</div>
+					<div class="bio">
+						<h4 class="name">Harlien puth</h4>
+						<p>Strength Trainer</p>
+						<ul class="social-icons">
+							<li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+							<li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+							<li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+							<li><a href="#"><i class="fa-brands fa-pinterest-p"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="member-box">
+					<div class="images">
+						<img src="assets/images/member-4.png" alt="images">
+					</div>
+					<div class="bio">
+						<h4 class="name">Tristin Chinez</h4>
+						<p>Yoga Coach</p>
+						<ul class="social-icons">
+							<li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+							<li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+							<li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+							<li><a href="#"><i class="fa-brands fa-pinterest-p"></i></a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+	</section>
 
-      categoryMap.clear();
-      const categories = doc.getElementsByTagName("category");
-      for (const cat of categories) {
-        const id = cat.getAttribute("id");
-        const name = (cat.textContent || "").trim();
-        const parentId = cat.getAttribute("parentId") || null;
-        if (id) categoryMap.set(id, { name, parentId });
-      }
+	<!-- End Team Member Section -->
 
-      rows = [];
-      const offers = doc.getElementsByTagName("offer");
+	<!-- Start Testimonial Section -->
 
-      for (const el of offers) {
-        const catId = textOf(el, "categoryId") || "";
-        let parentCatName = "Без категорії";
-        if (catId && categoryMap.has(catId)) parentCatName = getParentCategoryName(catId);
-        else parentCatName = (textOf(el, "category") || "Без категорії").trim();
+	<section class="testimonial-section">
+		<div class="container">
+			<div class="section-title">
+				<h4 class="subtitle"><span>Testimonial</span></h4>
+				<h1 class="title">What Our Client Say?</h1>
+			</div>
+			<div class="testimonial-carousel owl-carousel">
+				<div class="testimonial-content">
+					<h3 class="text">Customers rave about the durability and performance of our electric equipment. Many highlight the exceptional build quality, energy efficiency, and user-friendly design</h3>
+					<div class="profile">
+						<div class="profile-img">
+							<img src="assets/images/testimonial-man.png" alt="images">
+						</div>
+						<div class="address">
+							<ul class="star-icon">
+								<li><i class="fa-solid fa-star"></i></li>
+								<li><i class="fa-solid fa-star"></i></li>
+								<li><i class="fa-solid fa-star"></i></li>
+								<li><i class="fa-solid fa-star"></i></li>
+								<li><i class="fa-solid fa-star"></i></li>
+							</ul>
+							<h4 class="name">Yousuf Kibriya</h4>
+							<p>Business Man</p>
+						</div>
+					</div>
+				</div>
+				<div class="testimonial-content">
+					<h3 class="text">Customers rave about the durability and performance of our electric equipment. Many highlight the exceptional build quality, energy efficiency, and user-friendly design</h3>
+					<div class="profile">
+						<div class="profile-img">
+							<img src="assets/images/testimonial-man.png" alt="images">
+						</div>
+						<div class="address">
+							<ul class="star-icon">
+								<li><i class="fa-solid fa-star"></i></li>
+								<li><i class="fa-solid fa-star"></i></li>
+								<li><i class="fa-solid fa-star"></i></li>
+								<li><i class="fa-solid fa-star"></i></li>
+								<li><i class="fa-solid fa-star"></i></li>
+							</ul>
+							<h4 class="name">Yousuf Kibriya</h4>
+							<p>Business Man</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-        const nameUa = readLangText(el, "name", "ua") || "—";
-        const artikul = (textOf(el, "vendorCode") || "").trim() || (el.getAttribute("id") || "").trim() || "—";
-        const url = (textOf(el, "url") || "").trim();
+	<!-- End Testimonial Section -->
 
-        rows.push({
-          cat: parentCatName,
-          name: nameUa,
-          descr: readLangText(el, "description", "ua") || "—",
-          price: (textOf(el, "price") || "").trim() || "—",
-          artikul,
-          picture: (textOf(el, "picture") || "").trim(),
-          url,
-          _search: normalize(nameUa + " " + artikul + " " + parentCatName)
-        });
-      }
+	<!-- Start Package Section -->
 
-      groups = new Map();
-      for (const r of rows) {
-        if (!groups.has(r.cat)) groups.set(r.cat, []);
-        groups.get(r.cat).push(r);
-      }
-      groups = new Map([...groups.entries()].sort((a, b) => b[1].length - a[1].length));
+	<section class="package-section">
+		<div class="container">
+			<div class="top">
+				<div class="section-title">
+					<h4 class="subtitle"><span>Pricing Plan</span></h4>
+					<h1 class="title">Choose Our Package</h1>
+				</div>
+				<div class="button">
+					<a href="#" class="btn">View Pricing<i class="fa-solid fa-arrow-right"></i></a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6 col-lg-6 col-xl-4">
+					<div class="package-box">
+						<div class="box-head">
+							<h5 class="price-title">Silver Package</h5>
+							<span class="price">$ 59.00</span>
+							<span class="validity">/Per Month</span>
+						</div>
+						<div class="box-body">
+							<ul>
+								<li><i class="fa-regular fa-circle-check"></i>30 Days Trial Features</li>
+								<li><i class="fa-regular fa-circle-check"></i>Unlimited Features</li>
+								<li><i class="fa-regular fa-circle-check"></i>Multi-Language Content</li>
+								<li><i class="fa-regular fa-circle-xmark"></i>Data backup and recovery</li>
+								<li><i class="fa-regular fa-circle-xmark"></i>Synced To Cloud Database</li>
+							</ul>
+						</div>
+						<div class="button">
+							<a href="#" class="btn">Purchase Now<i class="fa-solid fa-arrow-right"></i></a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6 col-lg-6 col-xl-4">
+					<div class="package-box">
+						<div class="box-head">
+							<h5 class="price-title">Silver Package</h5>
+							<span class="price">$ 59.00</span>
+							<span class="validity">/Per Month</span>
+						</div>
+						<div class="box-body">
+							<ul>
+								<li><i class="fa-regular fa-circle-check"></i>30 Days Trial Features</li>
+								<li><i class="fa-regular fa-circle-check"></i>Unlimited Features</li>
+								<li><i class="fa-regular fa-circle-check"></i>Multi-Language Content</li>
+								<li><i class="fa-regular fa-circle-check"></i>Data backup and recovery</li>
+								<li><i class="fa-regular fa-circle-xmark"></i>Synced To Cloud Database</li>
+							</ul>
+						</div>
+						<div class="button">
+							<a href="#" class="btn active">Purchase Now<i class="fa-solid fa-arrow-right"></i></a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6 col-lg-6 col-xl-4">
+					<div class="package-box">
+						<div class="box-head">
+							<h5 class="price-title">Silver Package</h5>
+							<span class="price">$ 59.00</span>
+							<span class="validity">/Per Month</span>
+						</div>
+						<div class="box-body">
+							<ul>
+								<li><i class="fa-regular fa-circle-check"></i>30 Days Trial Features</li>
+								<li><i class="fa-regular fa-circle-check"></i>Unlimited Features</li>
+								<li><i class="fa-regular fa-circle-check"></i>Multi-Language Content</li>
+								<li><i class="fa-regular fa-circle-check"></i>Data backup and recovery</li>
+								<li><i class="fa-regular fa-circle-check"></i>Synced To Cloud Database</li>
+							</ul>
+						</div>
+						<div class="button">
+							<a href="#" class="btn">Purchase Now<i class="fa-solid fa-arrow-right"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-      if (activeCat !== "__ALL__" && !groups.has(activeCat)) activeCat = "__ALL__";
+	<!-- End Package Section -->
 
-      render();
+	<!-- Start Brand Section -->
 
-    } catch (e) {
-      statusEl.textContent = "Помилка";
-      errorEl.style.display = "block";
-      errorEl.textContent = `Помилка: ${String(e)}`;
-      loadMoreWrap.style.display = "none";
-    }
-  }
+	<section class="brand-section">
+		<div class="brand-carousel owl-carousel">
+			<div class="brand-item">
+				<img src="assets/images/brand-1.png" alt="images">
+			</div>
+			<div class="brand-item">
+				<img src="assets/images/brand-2.png" alt="images">
+			</div>
+			<div class="brand-item">
+				<img src="assets/images/brand-3.png" alt="images">
+			</div>
+			<div class="brand-item">
+				<img src="assets/images/brand-4.png" alt="images">
+			</div>
+			<div class="brand-item">
+				<img src="assets/images/brand-5.png" alt="images">
+			</div>
+			<div class="brand-item">
+				<img src="assets/images/brand-6.png" alt="images">
+			</div>
+			<div class="brand-item">
+				<img src="assets/images/brand-1.png" alt="images">
+			</div>
+			<div class="brand-item">
+				<img src="assets/images/brand-2.png" alt="images">
+			</div>
+			<div class="brand-item">
+				<img src="assets/images/brand-3.png" alt="images">
+			</div>
+			<div class="brand-item">
+				<img src="assets/images/brand-4.png" alt="images">
+			</div>
+			<div class="brand-item">
+				<img src="assets/images/brand-5.png" alt="images">
+			</div>
+			<div class="brand-item">
+				<img src="assets/images/brand-6.png" alt="images">
+			</div>
+		</div>
+	</section>
 
-  function getFilteredRows() {
-    const q = normalize(qEl.value);
-    let filtered = rows;
-    if (activeCat !== "__ALL__") filtered = filtered.filter(r => r.cat === activeCat);
-    if (q) filtered = filtered.filter(r => r._search.includes(q));
-    return filtered;
-  }
+	<!-- End Brand Section -->
 
-  function render() {
-    const filtered = getFilteredRows();
-    const showing = Math.min(visibleLimit, filtered.length);
+	<!-- Start Blog Section -->
 
-    statusEl.innerHTML =
-      `Товарів: <b>${filtered.length}</b> <span class="muted">(показано: ${showing}, категорія: ${escapeHtml(activeCat === "__ALL__" ? "Усі" : activeCat)})</span>`;
+	<section class="blog-section">
+		<div class="container">
+			<div class="section-title">
+				<h4 class="subtitle"><span>LETEST BLOG</span></h4>
+				<h1 class="title">Latest News & Feeds</h1>
+			</div>
+			<div class="blog-box">
+				<div class="blog-left">
+					<div class="blog-subtitle">
+						<span>Gymix</span>
+						<span class="separetor"></span>
+						<span>February 08, 2025</span>
+					</div>
+					<h4 class="blog-heading">
+						<a href="#">How to Create a Workout Routine You’ll Actually Stick To</a>
+					</h4>
+					<p>Build strength, endurance, and fitness with dynamic workouts and expert guidance for a balanced, powerful physique.</p>
+					<div class="button">
+						<a href="#" class="btn">Read More<i class="fa-solid fa-arrow-right"></i></a>
+					</div>
+				</div>
+				<div class="blog-right">
+					<div class="image">
+						<img src="assets/images/blog-3.jpg" alt="image">
+					</div>
+				</div>
+			</div>
+			<div class="blog-box">
+				<div class="blog-left">
+					<div class="blog-subtitle">
+						<span>Gymix</span>
+						<span class="separetor"></span>
+						<span>February 08, 2025</span>
+					</div>
+					<h4 class="blog-heading">
+						<a href="#">The Benefits of Strength Training for Every Body Type</a>
+					</h4>
+					<p>Build strength, endurance, and fitness with dynamic workouts and expert guidance for a balanced, powerful physique.</p>
+					<div class="button">
+						<a href="#" class="btn">Read More<i class="fa-solid fa-arrow-right"></i></a>
+					</div>
+				</div>
+				<div class="blog-right">
+					<div class="image">
+						<img src="assets/images/blog-2.jpg" alt="image">
+					</div>
+				</div>
+			</div>
+			<div class="blog-box">
+				<div class="blog-left">
+					<div class="blog-subtitle">
+						<span>Gymix</span>
+						<span class="separetor"></span>
+						<span>February 08, 2025</span>
+					</div>
+					<h4 class="blog-heading">
+						<a href="#">Nutrition 101 The Perfect Pair to Your Workout Plan</a>
+					</h4>
+					<p>Build strength, endurance, and fitness with dynamic workouts and expert guidance for a balanced, powerful physique.</p>
+					<div class="button">
+						<a href="#" class="btn">Read More<i class="fa-solid fa-arrow-right"></i></a>
+					</div>
+				</div>
+				<div class="blog-right">
+					<div class="image">
+						<img src="assets/images/blog-1.jpg" alt="image">
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-    if (filtered.length > PAGE_SIZE) {
-      loadMoreWrap.style.display = "flex";
-      moreBtn.style.display = (visibleLimit < filtered.length) ? "inline-block" : "none";
-      allBtn.style.display = (visibleLimit < filtered.length) ? "inline-block" : "none";
-      collapseBtn.style.display = (visibleLimit > PAGE_SIZE) ? "inline-block" : "none";
-    } else {
-      loadMoreWrap.style.display = "none";
-    }
+	<!-- End Blog Section -->
 
-    renderCategories();
+	<!-- Start Footer Section -->
 
-    let renderGroups;
-    if (activeCat === "__ALL__") {
-      const byCat = new Map();
-      for (const r of filtered) {
-        if (!byCat.has(r.cat)) byCat.set(r.cat, []);
-        byCat.get(r.cat).push(r);
-      }
-      renderGroups = [...byCat.entries()].sort((a,b) => b[1].length - a[1].length);
-    } else {
-      renderGroups = [[activeCat, filtered]];
-    }
+	<footer class="footer-section">
+		<div class="container">
+			<div class="footer-content">
+				<div class="discription">
+					<img src="assets/images/site-logo.png" alt="images">
+					<p>Achieve your health goals with expert trainers, state-of-the-art equipment, and a supportive community</p>
+					<ul>
+						<li class="title">Follow Us:</li>
+						<li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+						<li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+						<li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+						<li><a href="#"><i class="fa-brands fa-linkedin"></i></a></li>
+					</ul>
+				</div>
+				<div class="contact">
+					<h3>Contact</h3>
+					<ul>
+						<li><a href="mailto:fitcoredemo@example.com"><i class="fa-solid fa-envelope"></i>fitcoredemo@example.com</a></li>
+						<li><a href="tel:56712345678901"><i class="fa-solid fa-phone"></i>+ (567) 1234-567-8901</a></li>
+						<li><i class="fa-solid fa-location-dot"></i>293 Harrison St, San Francisco, CA 94103, United States</li>
+					</ul>
+				</div>
+				<div class="letter">
+					<h3>Newsletter</h3>
+					<p>Subscribe today and unlock 20% off your first class package.</p>
+					<form action="#" method="post">
+						<div class="mail">
+							<input type="email" placeholder="Enter your Email">
+							<button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<p class="end-text">All Right Reserved © FitCore 2025</p>
+		</div>
+	</footer>
 
-    outputEl.innerHTML = renderGroups.map(([cat, items]) => renderGroup(cat, items, visibleLimit)).join("");
+	<!-- End Footer Section -->
 
-    document.querySelectorAll("[data-group-toggle]").forEach(h => {
-      h.addEventListener("click", () => {
-        const id = h.getAttribute("data-group-toggle");
-        const body = document.getElementById(id);
-        if (!body) return;
-        body.style.display = (body.style.display === "none") ? "block" : "none";
-      });
-    });
-  }
+	<!-- Search Window -->
 
-  function renderCategories() {
-    const q = normalize(qEl.value);
+	<div class="search-window">
+		<button class="search-close"><i class="fa-solid fa-xmark"></i></button>
+		<form method="post" action="#">
+			<div class="form-group">
+				<input type="search" name="search-field" value="" placeholder="Search Here" required="">
+				<button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+			</div>
+		</form>
+	</div>
 
-    const counts = new Map();
-    for (const [cat, items] of groups.entries()) {
-      let list = items;
-      if (q) list = list.filter(r => r._search.includes(q));
-      counts.set(cat, list.length);
-    }
-    const total = rows.filter(r => !q || r._search.includes(q)).length;
+	<!-- Script Fill -->
 
-    let html = `
-      <div class="cat-chip ${activeCat === "__ALL__" ? "active" : ""}" data-cat="__ALL__">
-        Усі <span class="badge">${total}</span>
-      </div>
-    `;
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="assets/js/owl.carousel.min.js"></script>
+	<script src="assets/js/venobox.min.js"></script>
+	<script src="assets/js/script.js"></script>
 
-    [...groups.keys()].forEach(cat => {
-      const c = counts.get(cat) || 0;
-      html += `
-        <div class="cat-chip ${activeCat === cat ? "active" : ""}" data-cat="${escapeHtml(cat)}">
-          ${escapeHtml(cat)} <span class="badge">${c}</span>
-        </div>
-      `;
-    });
-
-    catBarEl.innerHTML = html;
-
-    catBarEl.querySelectorAll(".cat-chip").forEach(chip => {
-      chip.addEventListener("click", () => {
-        activeCat = chip.getAttribute("data-cat");
-        visibleLimit = PAGE_SIZE;
-        render();
-      });
-    });
-  }
-
-  function renderGroup(cat, items, limitGlobal) {
-    const groupId = "g_" + Math.abs(cat.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0));
-    const showCount = Math.min(limitGlobal, items.length);
-
-    let html = `
-      <div class="group">
-        <div class="group-header" data-group-toggle="${groupId}">
-          <div>${escapeHtml(cat)}</div>
-          <small>Товарів: ${items.length} (показано: ${showCount})</small>
-        </div>
-        <div class="group-body" id="${groupId}">
-          <table>
-            <thead>
-              <tr>
-                <th>Фото</th>
-                <th>Назва</th>
-                <th>Артикул</th>
-                <th>Ціна</th>
-                <th>Опис</th>
-                <th>Деталі</th>
-              </tr>
-            </thead>
-            <tbody>
-    `;
-
-    for (let i = 0; i < showCount; i++) {
-      const r = items[i];
-
-      const imgTag = r.picture
-        ? `<img src="${escapeHtml(r.picture)}" alt="${escapeHtml(r.name)}"
-             onerror="this.onerror=null;this.src='https://via.placeholder.com/140?text=Немає+фото';">`
-        : "—";
-
-      const descrShort = r.descr.length > 160 ? (r.descr.slice(0,160) + "...") : r.descr;
-
-      html += `
-        <tr>
-          <td>${imgTag}</td>
-          <td>${escapeHtml(r.name)}</td>
-          <td>${escapeHtml(r.artikul)}</td>
-          <td>${escapeHtml(r.price)}</td>
-          <td>${escapeHtml(descrShort)}</td>
-          <td>
-            <button class="details-btn"
-              onclick="showModal('${escapeHtml(r.name)}','${escapeHtml(r.artikul)}','${escapeHtml(r.price)}','${escapeHtml(r.picture)}','${escapeHtml(r.descr)}','${escapeHtml(r.cat)}','${escapeHtml(r.url)}')">
-              Деталі
-            </button>
-          </td>
-        </tr>
-      `;
-    }
-
-    html += `
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `;
-    return html;
-  }
-
-  window.showModal = function(name, artikul, price, picture, descr, cat, url) {
-    const picHtml = picture && picture !== "—"
-      ? `<img src="${picture}" alt="${name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/900x600?text=No+Image';">`
-      : `<p>Фото відсутнє</p>`;
-
-    const urlHtml = (url && url.trim().length)
-      ? `<div class="modal-actions">
-           <a class="open-link" href="${url}" target="_blank" rel="noopener">🔗 Відкрити на сайті</a>
-         </div>`
-      : `<div class="modal-actions"><span class="muted">Посилання: немає у фіді</span></div>`;
-
-    modalBody.innerHTML = `
-      <h2>${name}</h2>
-      ${urlHtml}
-      <p><strong>Артикул:</strong> ${artikul}</p>
-      <p><strong>Ціна:</strong> ${price}</p>
-      <p><strong>Категорія:</strong> ${cat}</p>
-      ${picHtml}
-      <p><strong>Повний опис:</strong><br>${escapeHtml(descr)}</p>
-    `;
-    modal.style.display = "block";
-  };
-
-  load();
-})();
-</script>
 </body>
 </html>
